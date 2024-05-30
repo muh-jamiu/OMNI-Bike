@@ -50,6 +50,12 @@ const options = {
             { name: 'Auth', description: 'Endpoints related to user authentication' },
             { name: 'Bikes', description: 'Endpoints related to Bike function' },
             { name: 'QRCode', description: 'Endpoints related to Bike QRcode scanner' },
+            { name: 'QRCode', description: 'Endpoints related to Bike QRcode scanner' },
+            { name: 'Payments', description: 'Endpoints related to platform payment' },
+            { name: 'GPS', description: 'Endpoints related to GPS navigating' },
+            { name: 'Fitness tracker', description: 'Endpoints related to Fitness tracker' },
+            { name: 'Assistant', description: 'Endpoints related to Navigation assistant' },
+            { name: 'Ratings and Reviews', description: 'Endpoints related to user rating and review' },
         ]
     },
     apis: ["./app.js"],
