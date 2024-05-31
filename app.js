@@ -15,6 +15,7 @@ require("dotenv").config();
 const bcrypt = require("bcryptjs")
 const jwt = require("jsonwebtoken");
 const userRoutes = require("./api/routes/userRoute")
+const bikeRoute = require("./api/routes/bikeRoute")
 const swaggerDocs = require("./utils/swagger.docs");
 const swaggerUi = require('swagger-ui-express');
 const swaggerJsdoc = require('swagger-jsdoc');
@@ -86,6 +87,7 @@ app.get("/", (req, res) => {
 })
 
 app.use("/user", userRoutes)
+app.use("/bike", bikeRoute)
 
 app.use((req, res) => {
     res.status(404).json({
@@ -94,6 +96,7 @@ app.use((req, res) => {
 })
 module.exports = app
 
+// users
 /**
 * @swagger
 * /user/signup:
@@ -273,10 +276,12 @@ module.exports = app
  *         description: User fetch successfully
  */
 
+
+// bikes
 /**
  * @swagger
- * /bikes:
- *   get:
+ * /bike:
+ *   post:
  *     tags: [Bikes]
  *     summary: Get all bikes
  *     description: |
@@ -292,6 +297,95 @@ module.exports = app
  *       200:
  *         description: User fetch successfully
  */
+
+/**
+ * @swagger
+ * /bike/create:
+ *   post:
+ *     tags: [Bikes]
+ *     summary: Add new bike
+ *     description: |
+ *       This endpoint allows to add new bikes on the platform.
+ *         - bikename: The bike name. This field is required.
+ *         - type: The bike type. This field is required.
+ *         - description: The bike description. This field is required.
+ *         - image: The bike image.
+ *         - pricerange: The bike pricerange. This field is required.
+ *         - telephone: The bike station telephone. This field is required.
+ *         - available: The bike availability. This field is required.
+ *         - pricePerHour: The bike pricePerHour. This field is required.
+ *         - pricePerDay: The bike pricePerDay. This field is required.
+ *         - wheelsize: The bike wheelsize. This field is required.
+ *         - manufactured: The bike manufactured date. default is 2024.
+ *         - tires: The bike tires type.
+ *       
+ *     requestBody:
+ *       description: Adding bike object
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               bikename:
+ *                 type: string
+ *               type:
+ *                 type: string
+ *               description:
+ *                 type: string
+ *               image:
+ *                 type: string
+ *               pricerange:
+ *                 type: string
+ *               telephone:
+ *                 type: string
+ *               pricePerHour:
+ *                 type: string
+ *               pricePerDay:
+ *                 type: string
+ *               available:
+ *                 type: string
+ *               wheelsize:
+ *                 type: string
+ *               tires:
+ *                 type: string
+ *               manufactured:
+ *                 type: string
+ *             required:
+ *               - bikename
+ *     responses:
+ *       200:
+ *         description: bike added successfully
+ */
+
+
+/**
+ * @swagger
+ * /bike/delete:
+ *   delete:
+ *     tags: [Bikes]
+ *     summary: Delete a bike
+ *     description: |
+ *       This endpoint allows to delete a bike on the platform.
+ *         - id: The bike id. This field is required.
+ *       
+ *     requestBody:
+ *       description: Adding bike object
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               id:
+ *                 type: string
+ *             required:
+ *               - id
+ *     responses:
+ *       200:
+ *         description: bike added successfully
+ */
+
 
 /**
  * @swagger
