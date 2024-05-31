@@ -56,6 +56,7 @@ const options = {
             { name: 'Fitness tracker', description: 'Endpoints related to Fitness tracker' },
             { name: 'Assistant', description: 'Endpoints related to Navigation assistant' },
             { name: 'Ratings and Reviews', description: 'Endpoints related to user rating and review' },
+            { name: 'Rental', description: 'Endpoints related to rental history' },
         ]
     },
     apis: ["./app.js"],
@@ -137,6 +138,51 @@ module.exports = app
 *         description: User created successfully
 */
 
+/**
+* @swagger
+* /user/update:
+*   patch:
+*     tags: [Auth]
+*     summary: Update a user
+*     description: |
+*       This endpoint allows you to update a user account.
+*       To update a user, you must provide the following information:
+*       
+*       - id: The id  of the user. This field is required.
+*       - email: The email address for the user account.
+*       - firstname: The firstname  for the user account.
+*       - lastname: The lastname for the user account.
+*       - phone: The phone for the user account.
+*       - username: The username for the user account.
+*       - address: The address  for the user account.
+*       
+*       Upon successful creation, the endpoint returns a response with status code 200 (okay).
+*     requestBody:
+*       description: User object
+*       required: true
+*       content:
+*         application/json:
+*           schema:
+*             type: object
+*             properties:
+*               id:
+*                 type: string
+*               firstname:
+*                 type: string
+*               lastname:
+*                 type: string
+*               email:
+*                 type: string
+*               username:
+*                 type: string
+*               phone:
+*                 type: string
+*             required:
+*               - id
+*     responses:
+*       200:
+*         description: User updated successfully
+*/
 
 
 /**

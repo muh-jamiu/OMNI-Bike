@@ -7,6 +7,7 @@ route.post("/signup", userController.createUser)
 route.post("/login", userController.loginUser)
 route.post("/get-user", userController.getUserByEmail)
 route.post("/verify-code", userController.verifyCode)
+route.patch("/update", userController.UpdateUser)
 
 
 module.exports = route

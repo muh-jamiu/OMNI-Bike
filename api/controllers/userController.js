@@ -59,7 +59,7 @@ const createUser = (req, res) => {
     userSchema.find({email : req.body.email})
     .then(result => {
        if(result.length >= 1){
-            res.status(200).json({
+            res.status(400).json({
                 message : "user already exist"
             })
        }else{
@@ -192,6 +192,28 @@ const getUserByEmail = (req, res) => {
     }
 }
 
+const UpdateUser = (req, res) => {
+    const {firstname, lastname, email, id, phone, address, username} = req.body
+    userSchema.findOneAndUpdate({_id : id}, {firstname:firstname, lastname: lastname, email:email, phone:phone, address:address, username:username })
+    .then(result => {
+        if(!result){
+            return res.status(400).json({
+                message: "User does not exist"
+            })
+        }
+        res.status(200).json({
+            message: "User has been updated succesfully"
+        })
+    })
+    .catch(err => {
+        res.status(500).json({
+            message : err
+        })
+    })
+
+   
+}
+
 const verifyCode = (req, res) => {
     CodeSchema.find({"code" : req.body.code})
     .then(data => {
@@ -230,4 +252,5 @@ module.exports = {
     loginUser,
     getUserByEmail,
     verifyCode,
+    UpdateUser,
 }
