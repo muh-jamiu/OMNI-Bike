@@ -52,6 +52,7 @@ const options = {
             { name: 'Auth', description: 'Endpoints related to user authentication' },
             { name: 'Bikes', description: 'Endpoints related to Bike function' },
             { name: 'Rental', description: 'Endpoints related to rental history' },
+            { name: 'Reviews', description: 'Endpoints related to bike reviews' },
             { name: 'QRCode', description: 'Endpoints related to Bike QRcode scanner' },
             { name: 'Payments', description: 'Endpoints related to platform payment' },
             { name: 'GPS', description: 'Endpoints related to GPS navigating' },
@@ -565,6 +566,106 @@ module.exports = app
 *     responses:
 *       200:
 *         description: Rental created successfully
+*/
+
+
+// reviews
+/**
+* @swagger
+* /user/reviews:
+*   post:
+*     tags: [Reviews]
+*     summary: Drop a review for a Bike
+*     description: |
+*       This endpoint allows you to add review for a bike.
+*       To add a review, you must provide the following information:
+*       
+*       - user: The user id. This field is required.
+*       - bike: The bike id. This field is required.
+*       - title: The review title. This field is required.
+*       - comment: The review comment. This field is required.
+*       - rating: The review rating. This field is required.
+*       
+*     requestBody:
+*       description: Review object
+*       required: true
+*       content:
+*         application/json:
+*           schema:
+*             type: object
+*             properties:
+*               user:
+*                 type: string
+*               bike:
+*                 type: string
+*               title:
+*                 type: string
+*               comment:
+*                 type: string
+*               rating:
+*                 type: number
+*             required:
+*               - user
+*               - bike
+*               - title
+*               - comment
+*               - rating
+*     responses:
+*       200:
+*         description: Review created successfully
+*/
+
+/**
+* @swagger
+* /user/reviews:
+*   get:
+*     tags: [Reviews]
+*     summary: Fetch all platform review
+*     description: |
+*       This endpoint allows you to fetch all platform review for bikes.
+*       
+*     requestBody:
+*       description: Reviews object
+*       required: true
+*       content:
+*         application/json:
+*           schema:
+*             type: object
+*             properties:
+*             required:
+*     responses:
+*       200:
+*         description: Review fetch successfully
+*/
+
+
+/**
+* @swagger
+* /user/bike-reviews:
+*   get:
+*     tags: [Reviews]
+*     summary: Fetch reviews of a particular Bike
+*     description: |
+*       This endpoint allows you to fetch reviews of a particular Bike.
+*       To fetch reviews, you must provide the following information:
+*       
+*       - bikeId: The bike id. This field is required.
+*       
+*     requestBody:
+*       description: Reviews object
+*       required: true
+*       content:
+*         application/json:
+*           schema:
+*             type: object
+*             properties:
+*               bikeId:
+*                 type: string
+*             required:
+*               - bikeId
+*     responses:
+*       200:
+*         description: Review fetch successfully
 */
 
 

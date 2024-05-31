@@ -1,5 +1,6 @@
 const rentalSchemaSchema = require("../model/bookingSchema")
 const bikeSchema = require("../model/bikeSchema")
+const axios = require('axios');
 
 const rentBike = (req, res) => {
     const {user, bike, rentHr, expiretime} = req.body
@@ -62,7 +63,31 @@ const userRentHistory = (req, res) => {
 
 }
 
+const navigationGPS = async (req, res) => {
+    const { start, end } = req.body;
+    if (!start || !end) {
+        return res.status(400).send('Start and end coordinates are required');
+    }
+
+    try {
+        const response = await axios.get(`https://api.mapbox.com/directions/v5/mapbox/driving/${start};${end}`, {
+            params: {
+                access_token: 'YOUR_MAPBOX_ACCESS_TOKEN',
+                alternatives: true,
+                geometries: 'geojson',
+                steps: true
+            }
+        });
+        res.status(200).json(response.data);
+    } catch (error) {
+        res.status(500).json(error.message);
+    }
+}
+
+
+
 module.exports = {
     rentBike,
-    userRentHistory
+    userRentHistory,
+    navigationGPS
 }

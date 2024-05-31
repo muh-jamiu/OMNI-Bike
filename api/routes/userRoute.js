@@ -8,6 +8,9 @@ route.post("/login", userController.loginUser)
 route.post("/get-user", userController.getUserByEmail)
 route.post("/verify-code", userController.verifyCode)
 route.patch("/update", userController.UpdateUser)
+route.post("/reviews", userController.createReview)
+route.get("/reviews", userController.getallReviews)
+route.get("/bike-reviews", userController.getbikesReviews)
 
 
 module.exports = route

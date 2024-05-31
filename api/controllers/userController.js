@@ -1,5 +1,6 @@
 const userSchema = require("../model/userSchema")
 const CodeSchema = require("../model/codeSchema")
+const reviewSchema = require("../model/reviewSchema")
 const bcrypt = require("bcryptjs")
 const jwt = require("jsonwebtoken")
 var nodemailer = require('nodemailer');
@@ -246,6 +247,96 @@ const verifyCode = (req, res) => {
     })
 }
 
+
+const createReview = (req, res) => {
+    const {user, bike, title, comment, rating} = req.body
+    userSchema.find({_id : user})
+    .then(users => {
+        if(users.length == 0){
+            return res.status(400).json({
+                message : "User does not exist",
+            })
+        }
+
+        const review = new reviewSchema({
+            user,
+            bike,
+            title,
+            comment,
+            rating
+        })
+    
+        review.save()
+        .then(data => {
+                res.status(200).json({
+                    message : "review created successfully",
+                    data,
+                })
+        })
+        .catch( err => {
+            res.status(500).json({
+                message: err
+            })
+        })
+    }) 
+    .catch( err => {
+        res.status(500).json({
+            message: err
+        })
+    })
+   
+}
+
+const getallReviews = (req, res) => {
+    reviewSchema.find()
+    .populate("user")
+    .populate("bike")
+    .then(reviews => {
+        if(reviews.length == 0){
+            return res.status(400).json({
+                message : "there are no reviews",
+            })
+        }
+
+        return res.status(400).json({
+            message : "reviews fetch successfully",
+            reviews
+        })
+    }) 
+    .catch( err => {
+        res.status(500).json({
+            message: err
+        })
+    })
+   
+}
+
+const getbikesReviews = (req, res) => {
+    const {bikeId} = req.body
+    reviewSchema.find({bike: bikeId})
+    .populate("user")
+    .populate("bike")
+    .then(reviews => {
+        if(reviews.length == 0){
+            return res.status(400).json({
+                message : "there are no reviews for this bike",
+            })
+        }
+
+        return res.status(400).json({
+            message : "reviews fetch for this bike successfully",
+            reviews
+        })
+    }) 
+    .catch( err => {
+        res.status(500).json({
+            message: err
+        })
+    })
+   
+}
+
+
 module.exports = {
     createUser, 
     getAllUser,
@@ -253,4 +344,7 @@ module.exports = {
     getUserByEmail,
     verifyCode,
     UpdateUser,
+    createReview,
+    getallReviews,
+    getbikesReviews,
 }
