@@ -16,6 +16,7 @@ const bcrypt = require("bcryptjs")
 const jwt = require("jsonwebtoken");
 const userRoutes = require("./api/routes/userRoute")
 const bikeRoute = require("./api/routes/bikeRoute")
+const rentalRoute = require("./api/routes/rentalRoute")
 const swaggerDocs = require("./utils/swagger.docs");
 const swaggerUi = require('swagger-ui-express');
 const swaggerJsdoc = require('swagger-jsdoc');
@@ -50,14 +51,13 @@ const options = {
         tags: [
             { name: 'Auth', description: 'Endpoints related to user authentication' },
             { name: 'Bikes', description: 'Endpoints related to Bike function' },
-            { name: 'QRCode', description: 'Endpoints related to Bike QRcode scanner' },
+            { name: 'Rental', description: 'Endpoints related to rental history' },
             { name: 'QRCode', description: 'Endpoints related to Bike QRcode scanner' },
             { name: 'Payments', description: 'Endpoints related to platform payment' },
             { name: 'GPS', description: 'Endpoints related to GPS navigating' },
             { name: 'Fitness tracker', description: 'Endpoints related to Fitness tracker' },
             { name: 'Assistant', description: 'Endpoints related to Navigation assistant' },
             { name: 'Ratings and Reviews', description: 'Endpoints related to user rating and review' },
-            { name: 'Rental', description: 'Endpoints related to rental history' },
         ]
     },
     apis: ["./app.js"],
@@ -88,6 +88,7 @@ app.get("/", (req, res) => {
 
 app.use("/user", userRoutes)
 app.use("/bike", bikeRoute)
+app.use("/rental", rentalRoute)
 
 app.use((req, res) => {
     res.status(404).json({
@@ -187,7 +188,6 @@ module.exports = app
 *         description: User updated successfully
 */
 
-
 /**
  * @swagger
  * /user/login:
@@ -223,7 +223,100 @@ module.exports = app
  *         description: User logged in successfully
  */
 
+/**
+ * @swagger
+ * /user/confirm-otp:
+ *   post:
+ *     tags: [Auth]
+ *     summary: Confirm OTP
+ *     description: |
+ *       This endpoint allows users to confirm the one-time password (OTP) they received for authentication purposes.
+ *       Users must provide the OTP they received via email.
+ *       
+ *       Upon successful confirmation, the user's authentication is validated and they can proceed with their desired action.
+ *       
+ *       Note: The OTP expires after a certain period and can only be used once for authentication.
+ *     requestBody:
+ *       description: OTP object
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               OTP:
+ *                 type: string
+ *               email:
+ *                 type: string
+ *             required:
+ *               - email
+ *               - OTP
+ *     responses:
+ *       200:
+ *         description: OTP confirmed successfully
+ */
 
+/**
+ * @swagger
+ * /user/request-password-reset:
+ *   patch:
+ *     tags: [Auth]
+ *     summary: Request password reset
+ *     description: |
+ *       This endpoint allows users to request a password reset by providing their email address.
+ *       Upon successful request, a password reset OTP will be sent to the provided email address.
+ *       
+ *       Note: The password reset OTP is valid for a limited time period and can only be used once.
+ *     requestBody:
+ *       description: Password object
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               email:
+ *                 type: string
+ *             required:
+ *               - email
+ *     responses:
+ *       200:
+ *         description: Password reset pin sent
+ */
+
+/**
+ * @swagger
+ * /user/confirm-password-reset:
+ *   post:
+ *     tags: [Auth]
+ *     summary: Confirm request password
+ *     description: |
+ *       This endpoint allows users to confirm a password reset request by providing a new password and a token received via email.
+ *       Upon successful confirmation, the user's password will be updated to the new password.
+ *       
+ *       Note: The password reset token expires after a certain period and can only be used once.
+ *     requestBody:
+ *       description: Password object
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               pin:
+ *                 type: number
+ *               email:
+ *                 type: string
+ *               password:
+ *                 type: string
+ *             required:
+ *               - email
+ *               - pin
+ *               - password
+ *     responses:
+ *       200:
+ *         description: Your password has been reset successfully
+ */
 
 /**
  * @swagger
@@ -358,7 +451,6 @@ module.exports = app
  *         description: bike added successfully
  */
 
-
 /**
  * @swagger
  * /bike/delete:
@@ -386,7 +478,7 @@ module.exports = app
  *         description: bike added successfully
  */
 
-
+// qr code
 /**
  * @swagger
  * /qr-code:
@@ -408,100 +500,95 @@ module.exports = app
  */
 
 
+// rental
 /**
- * @swagger
- * /user/confirm-otp:
- *   post:
- *     tags: [Auth]
- *     summary: Confirm OTP
- *     description: |
- *       This endpoint allows users to confirm the one-time password (OTP) they received for authentication purposes.
- *       Users must provide the OTP they received via email.
- *       
- *       Upon successful confirmation, the user's authentication is validated and they can proceed with their desired action.
- *       
- *       Note: The OTP expires after a certain period and can only be used once for authentication.
- *     requestBody:
- *       description: OTP object
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             properties:
- *               OTP:
- *                 type: string
- *               email:
- *                 type: string
- *             required:
- *               - email
- *               - OTP
- *     responses:
- *       200:
- *         description: OTP confirmed successfully
- */
-
-
-/**
- * @swagger
- * /user/request-password-reset:
- *   patch:
- *     tags: [Auth]
- *     summary: Request password reset
- *     description: |
- *       This endpoint allows users to request a password reset by providing their email address.
- *       Upon successful request, a password reset OTP will be sent to the provided email address.
- *       
- *       Note: The password reset OTP is valid for a limited time period and can only be used once.
- *     requestBody:
- *       description: Password object
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             properties:
- *               email:
- *                 type: string
- *             required:
- *               - email
- *     responses:
- *       200:
- *         description: Password reset pin sent
- */
-
-
+* @swagger
+* /rental:
+*   post:
+*     tags: [Rental]
+*     summary: Rent a Bike
+*     description: |
+*       This endpoint allows you to rent a bike for a  user.
+*       To rent a bike, you must provide the following information:
+*       
+*       - user: The user id. This field is required.
+*       - bike: The bike id. This field is required.
+*       - rentHr: The hour(s) of bike rental. This field is required.
+*       
+*     requestBody:
+*       description: Rental object
+*       required: true
+*       content:
+*         application/json:
+*           schema:
+*             type: object
+*             properties:
+*               user:
+*                 type: string
+*               bike:
+*                 type: string
+*               rentHr:
+*                 type: string
+*             required:
+*               - user
+*               - bike
+*               - rentHr
+*     responses:
+*       200:
+*         description: Rental created successfully
+*/
 
 /**
- * @swagger
- * /user/confirm-password-reset:
- *   post:
- *     tags: [Auth]
- *     summary: Confirm request password
- *     description: |
- *       This endpoint allows users to confirm a password reset request by providing a new password and a token received via email.
- *       Upon successful confirmation, the user's password will be updated to the new password.
- *       
- *       Note: The password reset token expires after a certain period and can only be used once.
- *     requestBody:
- *       description: Password object
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             properties:
- *               pin:
- *                 type: number
- *               email:
- *                 type: string
- *               password:
- *                 type: string
- *             required:
- *               - email
- *               - pin
- *               - password
- *     responses:
- *       200:
- *         description: Your password has been reset successfully
- */
+* @swagger
+* /rental/history:
+*   get:
+*     tags: [Rental]
+*     summary: Get User Rental History
+*     description: |
+*       This endpoint allows you to get a particular user rental history.
+*       To get history, you must provide the following information:
+*       
+*       - userId: The user id. This field is required.
+*       
+*     requestBody:
+*       description: Rental object
+*       required: true
+*       content:
+*         application/json:
+*           schema:
+*             type: object
+*             properties:
+*               userId:
+*                 type: string
+*             required:
+*               - userId
+*     responses:
+*       200:
+*         description: Rental created successfully
+*/
+
+
+
+/**
+* @swagger
+* /rental:
+*   get:
+*     tags: [Rental]
+*     summary: Get all Platform Rental History
+*     description: |
+*       This endpoint allows you to get all platform rental history.
+*       
+*     requestBody:
+*       description: Rental object
+*       required: true
+*       content:
+*         application/json:
+*           schema:
+*             type: object
+*             properties:
+*             required:
+*     responses:
+*       200:
+*         description: Rental created successfully
+*/
+

@@ -1,7 +1,4 @@
 const bikeSchema = require("../model/bikeSchema")
-const bcrypt = require("bcryptjs")
-const jwt = require("jsonwebtoken")
-var nodemailer = require('nodemailer');
 
 const createBike = (req, res) => {
     const {bikename, type, name, description, image, pricerange, telephone, available, pricePerHour, pricePerDay, wheelsize, tires, manufactured} = req.body
