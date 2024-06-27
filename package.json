@@ -23,6 +23,7 @@
     "express-formidable": "^1.2.0",
     "express-validator": "^7.0.1",
     "file-type": "^19.0.0",
+    "firebase-admin": "^12.2.0",
     "format": "^0.2.2",
     "formidable": "^3.5.1",
     "fs-extra": "^11.2.0",
