@@ -2,25 +2,15 @@ const express = require("express")
 const app = express()
 const morgan = require("morgan")
 const cors = require("cors")
-const multer = require("multer")
-const path = require('path')
 const bodyParser = require('body-parser');
-const util = require('util');
-const Formidable = require('formidable');
-const cloudinary = require("cloudinary");
 require('dotenv').config()
-const { Configuration, OpenAIApi, OpenAI } = require("openai");  
-const { default: axios } = require("axios")
 require("dotenv").config();
-const bcrypt = require("bcryptjs")
-const jwt = require("jsonwebtoken");
 const userRoutes = require("./api/routes/userRoute")
 const bikeRoute = require("./api/routes/bikeRoute")
 const rentalRoute = require("./api/routes/rentalRoute")
-const swaggerDocs = require("./utils/swagger.docs");
+const trackRoute = require("./api/routes/trackRoute")
 const swaggerUi = require('swagger-ui-express');
 const swaggerJsdoc = require('swagger-jsdoc');
-const swaggerAnnotation = require("./utils/swagger.annotation")
 
 
 app.use(express.static("./public"))
@@ -90,6 +80,7 @@ app.get("/", (req, res) => {
 app.use("/user", userRoutes)
 app.use("/bike", bikeRoute)
 app.use("/rental", rentalRoute)
+app.use("/navigation", trackRoute)
 
 app.use((req, res) => {
     res.status(404).json({
