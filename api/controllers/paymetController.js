@@ -52,24 +52,24 @@ const Paypal = (req, res) => {
 
 
 const _Stripe =  async(req, res) => {
-//   const { amount, currency } = req.body;
-var amount = 500 * 100
-var currency = "USD"
+    const { amount, currency } = req.body;
+    var _amount = amount ?? 4000 * 100
+    var _currency = currency ?? "USD"
 
-  try {
-    const paymentIntent = await stripe.paymentIntents.create({
-      amount,
-      currency,
-    });
+    try {
+        const paymentIntent = await stripe.paymentIntents.create({
+            _amount,
+            _currency,
+        });
 
-    res.status(200).send({
-      clientSecret: paymentIntent,
-    });
-  } catch (error) {
-    res.status(500).send({
-      error: error.message,
-    });
-  }
+        res.status(200).send({
+        clientSecret: paymentIntent.client_secret,
+        });
+    } catch (error) {
+        res.status(500).send({
+        error: error.message,
+        });
+    }
 };
 
 
