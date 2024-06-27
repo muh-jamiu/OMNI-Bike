@@ -48,7 +48,6 @@ const options = {
             { name: 'GPS', description: 'Endpoints related to GPS navigating' },
             { name: 'Fitness tracker', description: 'Endpoints related to Fitness tracker' },
             { name: 'Assistant', description: 'Endpoints related to Navigation assistant' },
-            { name: 'Ratings and Reviews', description: 'Endpoints related to user rating and review' },
         ]
     },
     apis: ["./app.js"],

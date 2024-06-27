@@ -1,5 +1,15 @@
 const axios = require('axios');
 require('dotenv').config();
+const geolib = require('geolib');
+const mapbox = require('@mapbox/mapbox-sdk/services/directions');
+
+// Replace with your Mapbox access token
+const mapboxApiKey = process.env.MAPBOX_API_KEY ?? "n/a";
+const accessToken = mapboxApiKey;
+
+// Set up directions client
+const directionsClient = mapbox({ accessToken });
+
 
 const getMap = ('/map', async (req, res) => {
     const { lat, lon } = req.query;
@@ -39,7 +49,37 @@ const getRoute = ('/route', async (req, res) => {
     }
 });
 
+const navigationAssistant = async (req, res) => {
+    const _origin = "6.5244,3.3792";
+    var _destination = "9.0765,7.3986"
+    const { origin, destination } = req.query;
+
+    const parseCoordinates = (coord) => {
+        const [lat, lng] = coord.split(',').map(parseFloat);
+        if (isNaN(lat) || isNaN(lng) || lat < -90 || lat > 90 || lng < -180 || lng > 180) {
+          throw new Error('Invalid coordinates');
+        }
+        return [lng, lat]; // Mapbox SDK requires [longitude, latitude] format
+    };
+  
+    try {
+      const response = await directionsClient.getDirections({
+          waypoints: [
+            { coordinates: parseCoordinates(origin ?? _origin) },
+            { coordinates: parseCoordinates(destination ?? _destination) }
+          ],
+        profile: 'driving',
+        geometries: 'geojson',
+      }).send();
+      res.json(response.body);
+    } catch (err) {
+      console.error('Error fetching directions:', err.message);
+      res.status(500).json({ error: 'Failed to fetch directions ' + err.message });
+    }
+};
+
 module.exports = {
     getRoute,
     getMap,
+    navigationAssistant,
 }
