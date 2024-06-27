@@ -44,6 +44,7 @@
     "sequelize": "^6.37.1",
     "socket.io": "^4.7.5",
     "speakeasy": "^2.0.0",
+    "stripe": "^16.0.0",
     "swagger-jsdoc": "^6.2.8",
     "swagger-ui-express": "^5.0.0"
   },

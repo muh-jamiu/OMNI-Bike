@@ -1,5 +1,8 @@
 var paypal = require("./../../utils/paypayConfig");
 const express = require('express');
+const Stripe = require('stripe');
+require('dotenv').config();
+const stripe = Stripe(process.env.STRIPE_SECRET_KEY ?? "N/A");
 
 
 const Paypal = (req, res) => {
@@ -47,7 +50,32 @@ const Paypal = (req, res) => {
   });
 };
 
+
+const _Stripe =  async(req, res) => {
+//   const { amount, currency } = req.body;
+var amount = 500 * 100
+var currency = "USD"
+
+  try {
+    const paymentIntent = await stripe.paymentIntents.create({
+      amount,
+      currency,
+    });
+
+    res.status(200).send({
+      clientSecret: paymentIntent,
+    });
+  } catch (error) {
+    res.status(500).send({
+      error: error.message,
+    });
+  }
+};
+
+
+
 module.exports = {
     Paypal,
+    _Stripe,
 };
 

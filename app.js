@@ -713,6 +713,35 @@ module.exports = app
  */
 
 
+/**
+* @swagger
+* /rental/history:
+*   get:
+*     tags: [Rental]
+*     summary: Get User Rental History
+*     description: |
+*       This endpoint allows you to get a particular user rental history.
+*       To get history, you must provide the following information:
+*       
+*       - userId: The user id. This field is required.
+*       
+*     requestBody:
+*       description: Rental object
+*       required: true
+*       content:
+*         application/json:
+*           schema:
+*             type: object
+*             properties:
+*               userId:
+*                 type: string
+*             required:
+*               - userId
+*     responses:
+*       200:
+*         description: Rental created successfully
+*/
+
 
 /**
  * @swagger
@@ -780,7 +809,7 @@ module.exports = app
  *         - userId: The user ID. This field is required.
  *       
  *     requestBody:
- *       description: Rental object
+ *       description: Payment object
  *       required: true
  *       content:
  *         application/json:
@@ -796,39 +825,45 @@ module.exports = app
  *               - userId
  *     responses:
  *       200:
- *         description:  Navigation Assistant
+ *         description:  Payment
  */
 
-
 /**
-* @swagger
-* /rental/history:
-*   get:
-*     tags: [Rental]
-*     summary: Get User Rental History
-*     description: |
-*       This endpoint allows you to get a particular user rental history.
-*       To get history, you must provide the following information:
-*       
-*       - userId: The user id. This field is required.
-*       
-*     requestBody:
-*       description: Rental object
-*       required: true
-*       content:
-*         application/json:
-*           schema:
-*             type: object
-*             properties:
-*               userId:
-*                 type: string
-*             required:
-*               - userId
-*     responses:
-*       200:
-*         description: Rental created successfully
-*/
-
+ * @swagger
+ * /payment/stripe:
+ *   post:
+ *     tags: [Payments]
+ *     summary:  Pay with Stripe
+ *     description: |
+ *       This endpoint help users to use stripe as their payment method
+ *         - rentId: The rental ID user wanted to make payment for . This field is required.
+ *         - userId: The user ID. This field is required.
+ *       
+ *     requestBody:
+ *       description: Payment object
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               rentId:
+ *                 type: string
+ *               currency:
+ *                 type: string
+ *               amount:
+ *                 type: string
+ *               userId:
+ *                 type: string
+ *             required:
+ *               - rentId
+ *               - userId
+ *               - amount
+ *               - currency
+ *     responses:
+ *       200:
+ *         description: Payment
+ */
 
 
 
