@@ -9,6 +9,7 @@ const userRoutes = require("./api/routes/userRoute")
 const bikeRoute = require("./api/routes/bikeRoute")
 const rentalRoute = require("./api/routes/rentalRoute")
 const trackRoute = require("./api/routes/trackRoute")
+const paypalRoute = require("./api/routes/paypalRoute")
 const swaggerUi = require('swagger-ui-express');
 const swaggerJsdoc = require('swagger-jsdoc');
 
@@ -80,6 +81,7 @@ app.use("/user", userRoutes)
 app.use("/bike", bikeRoute)
 app.use("/rental", rentalRoute)
 app.use("/navigation", trackRoute)
+app.use("/payment", paypalRoute)
 
 app.use((req, res) => {
     res.status(404).json({
