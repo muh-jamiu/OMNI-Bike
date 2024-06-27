@@ -689,27 +689,25 @@ module.exports = app
 
 /**
  * @swagger
- * /navigation/route?start=3.3792,6.5244&end=4.5426,8.4966:
+ * /navigation/route:
  *   post:
  *     tags: [GPS]
  *     summary:  Get User Current Route
  *     description: |
  *       This endpoint allows users to view and get their current route, the lat and lon on the query is just for testing purpose
+ *       for testing purpose, use this start=3.3792,6.5244, end=4.5426,8.4966
  *         - start: The latitude and longitude the user start from. This field is required.
  *         - end: The latitude and longitude the user is going to. This field is required.
  *       
- *     requestBody:
- *       description: Current Route bike object
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             properties:
- *               start:
- *                 type: string
- *               end:
- *                 type: string
+ *     parameters:
+ *       - in: query
+ *         name: start
+ *         schema:
+ *            type: string     
+ *       - in: query
+ *         name: end
+ *         schema:
+ *            type: string      
  *     responses:
  *       200:
  *         description: Current route get successfully,
@@ -719,27 +717,26 @@ module.exports = app
 
 /**
  * @swagger
- * /navigation/map?lat=6.5244&lon=3.3792:
+ * /navigation/map:
  *   post:
  *     tags: [GPS]
  *     summary:  Get User Current Map
  *     description: |
  *       This endpoint allows users to view and get their current map, the lat and lon on the query is just for testing purpose
+ *       for testing purpose, use this lat=6.5244, lon=3.3792
  *         - longitude: The current longitude of the user. This field is required.
  *         - latitude: The current latitude of the user. This field is required.
  *       
- *     requestBody:
- *       description: Current map bike object
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             properties:
- *               lon:
- *                 type: Number
- *               lat:
- *                 type: Number
+ *     
+ *     parameters:
+ *       - in: query
+ *         name: lat
+ *         schema:
+ *            type: string     
+ *       - in: query
+ *         name: lon
+ *         schema:
+ *            type: string 
  *     responses:
  *       200:
  *         description: Current map get successfully,
