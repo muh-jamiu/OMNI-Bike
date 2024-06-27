@@ -1,4 +1,4 @@
-var paypal = require('paypal-rest-sdk');
+var paypal = require("./../../utils/paypayConfig");
 const express = require('express');
 
 
@@ -30,19 +30,14 @@ const Paypal = (req, res) => {
       "description": "This is the payment description."
     }]
   };
-
-  paypal = paypal.configure({
-    'mode': 'sandbox', 
-    'client_id': 'YOUR_CLIENT_ID',
-    'client_secret': 'YOUR_CLIENT_SECRET'
-  });
+  
 
   paypal.payment.create(create_payment_json, function (error, payment) {
     if (error) {
       console.error(error);
       res.status(500).send(error);
     } else {
-       return  res.status(500).send(payment);
+       return  res.status(200).send("payment");
       for(let i = 0; i < payment.links.length; i++) {
         if (payment.links[i].rel === 'approval_url') {
           res.redirect(payment.links[i].href);
