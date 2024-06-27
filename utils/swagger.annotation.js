@@ -217,5 +217,89 @@ const swaggerDefinitions = {
       },
     },
   },
+
+  "/navigation/map?lat={lat}&lon={lon}": {
+    post: {
+      tags: ["GPS"],
+      summary: "Get User Current Map",
+      description: `| 
+            This endpoint allows users to view and get their current map.
+            To get current map, users must provide their longitude and latitude. |
+
+            - longitude: The current longitude of the user. This field is required.
+            - latitude: The current latitude of the user. This field is required.
+
+            For testing purpose, use this longitute:=3.3792 latitude:=6.5244
+
+            Upon successful authentication, the endpoint returns a response with status code 200 (OK) along with locations object.
+
+
+              `,
+      requestBody: {
+        description: "Navigation object",
+        required: true,
+        content: {
+          "application/json": {
+            schema: {
+              type: "object",
+              properties: {
+                lon: { type: Number },
+                lat: { type: Number },
+              },
+              required: ["lon", "lat"],
+            },
+          },
+        },
+      },
+      responses: {
+        201: {
+          description: "Current map fetch successfully",
+        },
+      },
+    },
+  },
+
+  "/navigation/route?start={start}&end={end}": {
+    post: {
+      tags: ["GPS"],
+      summary: "Get User Current Route",
+      description: `| 
+            This endpoint allows users to view and get their current route.
+            To get current route, users must provide their start and end. |
+
+            - start: The latitude and longitude the user start from. This field is required.
+            - end: The latitude and longitude the user is going to. This field is required.
+
+            For testing purpose, use this start:=3.3792,6.5244 end:=4.5426,8.4966
+
+            Upon successful authentication, the endpoint returns a response with status code 200 (OK) along with locations object.
+
+
+              `,
+      requestBody: {
+        description: "Navigation object",
+        required: true,
+        content: {
+          "application/json": {
+            schema: {
+              type: "object",
+              properties: {
+                start: { type: "string" },
+                end: { type: "string" },
+              },
+              required: ["start", "end"],
+            },
+          },
+        },
+      },
+      responses: {
+        201: {
+          description: "Current get successfully",
+        },
+      },
+    },
+  },
+
+
 };
 
