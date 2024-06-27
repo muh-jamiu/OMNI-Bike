@@ -19,24 +19,24 @@ const sendEmailverify = (to, name, code) => {
         subject: 'Account Verification',
         html: `
             <a href="" class="logo d-flex" style="text-align: center; margin-bottom:.5em">
-                <h2 class="fw-bold mx-2 text-white">FarmPay </h2>
+                <h2 class="fw-bold mx-2 text-white">Omni Bike Rental </h2>
             </a>
             <h3 style="text-align: center; margin-top:0">Account Verification</h3>
         
             <hr>
             <h3 style="margin-top:2em">Dear ${name},</h3>
-            <p style="line-height: 28px">Thank you for registering with Farmpay. Please verify your email address to complete the signup process</p>
+            <p style="line-height: 28px">Thank you for registering with Omni Bike Rental. Please verify your email address to complete the signup process</p>
             <h4>Please verify with</h4> <h1>${code}</h1>
             <p>Verification Code will expire in 15 minutes</p>
             <p>If you did not sign up for this account, please ignore this email.</p>
             <h3 style="margin-bottom: .3em">Thank you,</h3>
-            <h3>Admyrer Team</h3>
-            <p>If you have any questions or need assistance, feel free to contact our support team at info@farmpay.com</p>
+            <h3>Omni Bike Rental Team</h3>
+            <p>If you have any questions or need assistance, feel free to contact our support team at info@omnibike.com</p>
         
             <p>Best regards</p>
             <p style="margin-bottom: 1em; pst-style-type:none"><a href="tel:+2348091810342"> +2349138650286</a></p>
-            <p style="margin-bottom: 1em; pst-style-type:none"><a href="">info@farmpay.com</a></p>
-            <p style="margin-bottom: 1em; pst-style-type:none"><a href=""> FarmPay</a></p>
+            <p style="margin-bottom: 1em; pst-style-type:none"><a href="">info@omnibike.com</a></p>
+            <p style="margin-bottom: 1em; pst-style-type:none"><a href=""> Omni Bike Rental</a></p>
 
         `,
     };
@@ -247,7 +247,6 @@ const verifyCode = (req, res) => {
     })
 }
 
-
 const createReview = (req, res) => {
     const {user, bike, title, comment, rating} = req.body
     userSchema.find({_id : user})
@@ -336,6 +335,46 @@ const getbikesReviews = (req, res) => {
    
 }
 
+const requestCode = (req, res) => {
+    const {email} = req.body
+
+    if(!email){
+        return res.status(404).json({
+            message : "Missing field: User Email is required",
+        })
+    }
+
+    userSchema.find({email : email})
+    .then(user => {
+       if(user.length >= 1){
+            var code = generateCode()
+            var saveCode = new CodeSchema({
+                code: code,
+                userId: user[0]._id
+            })
+            saveCode = saveCode.save()
+
+            if(saveCode){
+                var send = sendEmailverify(email, user[0].firstname, code);
+                return res.status(200).json({
+                    message : `Verification Code has been sent to ${email}`,
+                    user,
+                })
+            } 
+        }
+       else{
+        res.status(404).json({
+            message : "User does not exist"
+        })
+       }
+    })
+    .catch(err => {
+        res.status(500).json({
+            error : err
+        })
+    })
+}
+
 
 module.exports = {
     createUser, 
@@ -347,4 +386,5 @@ module.exports = {
     createReview,
     getallReviews,
     getbikesReviews,
+    requestCode,
 }

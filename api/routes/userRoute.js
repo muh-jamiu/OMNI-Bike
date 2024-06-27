@@ -11,6 +11,7 @@ route.patch("/update", userController.UpdateUser)
 route.post("/reviews", userController.createReview)
 route.get("/reviews", userController.getallReviews)
 route.get("/bike-reviews", userController.getbikesReviews)
+route.post("/request-otp", userController.requestCode)
 
 
 module.exports = route
