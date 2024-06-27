@@ -684,3 +684,65 @@ module.exports = app
 *         description: Rental created successfully
 */
 
+
+
+
+/**
+ * @swagger
+ * /navigation/route?start=3.3792,6.5244&end=4.5426,8.4966:
+ *   post:
+ *     tags: [GPS]
+ *     summary:  Get User Current Route
+ *     description: |
+ *       This endpoint allows users to view and get their current route, the lat and lon on the query is just for testing purpose
+ *         - start: The latitude and longitude the user start from. This field is required.
+ *         - end: The latitude and longitude the user is going to. This field is required.
+ *       
+ *     requestBody:
+ *       description: Current Route bike object
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               start:
+ *                 type: string
+ *               end:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: Current route get successfully,
+ */
+
+
+
+/**
+ * @swagger
+ * /navigation/map?lat=6.5244&lon=3.3792:
+ *   post:
+ *     tags: [GPS]
+ *     summary:  Get User Current Map
+ *     description: |
+ *       This endpoint allows users to view and get their current map, the lat and lon on the query is just for testing purpose
+ *         - longitude: The current longitude of the user. This field is required.
+ *         - latitude: The current latitude of the user. This field is required.
+ *       
+ *     requestBody:
+ *       description: Current map bike object
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               lon:
+ *                 type: Number
+ *               lat:
+ *                 type: Number
+ *     responses:
+ *       200:
+ *         description: Current map get successfully,
+ */
+
+
