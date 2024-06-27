@@ -684,8 +684,6 @@ module.exports = app
 */
 
 
-
-
 /**
  * @swagger
  * /navigation/route:
@@ -693,7 +691,7 @@ module.exports = app
  *     tags: [GPS]
  *     summary:  Get User Current Route
  *     description: |
- *       This endpoint allows users to view and get their current route, the lat and lon on the query is just for testing purpose
+ *       This endpoint allows users to view and get their current route
  *       for testing purpose, use this start=3.3792,6.5244, end=4.5426,8.4966
  *         - start: The latitude and longitude the user start from. This field is required.
  *         - end: The latitude and longitude the user is going to. This field is required.
@@ -721,7 +719,7 @@ module.exports = app
  *     tags: [GPS]
  *     summary:  Get User Current Map
  *     description: |
- *       This endpoint allows users to view and get their current map, the lat and lon on the query is just for testing purpose
+ *       This endpoint allows users to view and get their current map
  *       for testing purpose, use this lat=6.5244, lon=3.3792
  *         - longitude: The current longitude of the user. This field is required.
  *         - latitude: The current latitude of the user. This field is required.
@@ -739,6 +737,33 @@ module.exports = app
  *     responses:
  *       200:
  *         description: Current map get successfully,
+ */
+
+/**
+ * @swagger
+ * /navigation/assistant:
+ *   post:
+ *     tags: [Assistant]
+ *     summary:  Navigation Assistant
+ *     description: |
+ *       This endpoint help users in navigating their current route
+ *       for testing purpose, use this destination=9.0765,7.3986, origin=6.5244,3.3792
+ *         - origin: The current origin of the user. This field is required.
+ *         - destination: The current destination of the user. This field is required.
+ *       
+ *     
+ *     parameters:
+ *       - in: query
+ *         name: destination
+ *         schema:
+ *            type: string     
+ *       - in: query
+ *         name: origin
+ *         schema:
+ *            type: string 
+ *     responses:
+ *       200:
+ *         description:  Navigation Assistant
  */
 
 
