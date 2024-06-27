@@ -5,6 +5,53 @@ const bcrypt = require("bcryptjs")
 const jwt = require("jsonwebtoken")
 var nodemailer = require('nodemailer');
 
+const sendPasswordReset = (to, name, code) => {
+    var transporter = nodemailer.createTransport({
+        service: 'gmail',
+        auth: {
+            user: 'swift.secure.deliver@gmail.com',
+            pass: 'vnmv onnd lfjx ybmo',
+        }
+    });
+
+    var mailOptions = {
+        to: to,
+        subject: 'Password Reset',
+        html: `
+            <a href="" class="logo d-flex" style="text-align: center; margin-bottom:.5em">
+                <h2 class="fw-bold mx-2 text-white">Omni Bike Rental </h2>
+            </a>
+            <h3 style="text-align: center; margin-top:0">Password Reset</h3>
+        
+            <hr>
+            <h3 style="margin-top:2em">Dear ${name},</h3>
+            <p style="line-height: 28px">You requested for password reset code. Please verify your account if it is you.</p>
+            <h4>Please verify with</h4> <h1>${code}</h1>
+            <p>Password reset code will expire in 15 minutes</p>
+            <p>If you did not request for this? , please ignore this email.</p>
+            <h3 style="margin-bottom: .3em">Thank you,</h3>
+            <h3>Omni Bike Rental Team</h3>
+            <p>If you have any questions or need assistance, feel free to contact our support team at info@omnibike.com</p>
+        
+            <p>Best regards</p>
+            <p style="margin-bottom: 1em; pst-style-type:none"><a href="tel:+2348091810342"> +2349138650286</a></p>
+            <p style="margin-bottom: 1em; pst-style-type:none"><a href="">info@omnibike.com</a></p>
+            <p style="margin-bottom: 1em; pst-style-type:none"><a href=""> Omni Bike Rental</a></p>
+
+        `,
+    };
+
+    transporter.sendMail(mailOptions, function(error, info){
+        if(error){
+            console.log(error)
+        }else{
+            console.log(info.response)
+        }
+    });
+
+
+}
+
 const sendEmailverify = (to, name, code) => {
     var transporter = nodemailer.createTransport({
         service: 'gmail',
@@ -358,7 +405,6 @@ const requestCode = (req, res) => {
                 var send = sendEmailverify(email, user[0].firstname, code);
                 return res.status(200).json({
                     message : `Verification Code has been sent to ${email}`,
-                    user,
                 })
             } 
         }
@@ -375,6 +421,77 @@ const requestCode = (req, res) => {
     })
 }
 
+const requestPasswordCode = (req, res) => {
+    const {email} = req.body
+
+    if(!email){
+        return res.status(404).json({
+            message : "Missing field: User Email is required",
+        })
+    }
+
+    userSchema.find({email : email})
+    .then(user => {
+       if(user.length >= 1){
+            var code = generateCode()
+            var saveCode = new CodeSchema({
+                code: code,
+                userId: user[0]._id
+            })
+            saveCode = saveCode.save()
+
+            if(saveCode){
+                var send = sendPasswordReset(email, user[0].firstname, code);
+                return res.status(200).json({
+                    message : `Password Reset Code has been sent to ${email}`,
+                })
+            } 
+        }
+       else{
+        res.status(404).json({
+            message : "User does not exist"
+        })
+       }
+    })
+    .catch(err => {
+        res.status(500).json({
+            error : err
+        })
+    })
+}
+
+const verifyPasswordReset = (req, res) => {
+    CodeSchema.find({"code" : req.body.code})
+    .then(data => {
+        if(data.length == 0){
+            return res.status(400).json({
+                message : "Invalid code",
+            })
+        }
+
+        if( req.body.userId != data[0].userId){
+            return res.status(400).json({
+                message : "Invalid code",
+            })
+        }
+
+        userSchema.findOneAndUpdate({_id : req.body.userId}, {password: req.body.password})
+        .then(() => {
+            CodeSchema.findOneAndDelete({"code" : req.body.code})
+            .then( codeRes => {
+                return res.status(200).json({
+                    message : "Password Reset Successfully"
+                })
+            })
+       })
+    })
+    .catch(err => {
+        res.status(500).json({
+            message : err
+        })
+    })
+}
+
 
 module.exports = {
     createUser, 
@@ -387,4 +504,6 @@ module.exports = {
     getallReviews,
     getbikesReviews,
     requestCode,
+    requestPasswordCode,
+    verifyPasswordReset,
 }

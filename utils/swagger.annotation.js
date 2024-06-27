@@ -188,10 +188,10 @@ const swaggerDefinitions = {
       tags: ["Auth"],
       summary: "Confirm request password",
       description: `| 
-            This endpoint allows users to confirm a password reset request by providing a new password and a token received via email.
+            This endpoint allows users to confirm a password reset request by providing a new password and a code received via email.
             Upon successful confirmation, the user's password will be updated to the new password. |
     
-            Note: The password reset token expires after a certain period and can only be used once.
+            Note: The password reset code expires after a certain period and can only be used once.
           `,
       requestBody: {
         description: "Password object",
@@ -201,11 +201,11 @@ const swaggerDefinitions = {
             schema: {
               type: "object",
               properties: {
-                pin: { type: Number },
+                code: { type: Number },
                 email: { type: "string" },
-                password: { type: "string" },
+                userId: { type: "string" },
               },
-              required: ["email", "pin", "password"],
+              required: ["userId", "code", "password"],
             },
           },
         },

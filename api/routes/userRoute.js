@@ -12,6 +12,8 @@ route.post("/reviews", userController.createReview)
 route.get("/reviews", userController.getallReviews)
 route.get("/bike-reviews", userController.getbikesReviews)
 route.post("/request-otp", userController.requestCode)
+route.post("/request-password-reset", userController.requestPasswordCode)
+route.post("/confirm-password-reset", userController.verifyPasswordReset)
 
 
 module.exports = route
