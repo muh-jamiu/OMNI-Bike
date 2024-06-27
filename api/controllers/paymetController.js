@@ -58,8 +58,8 @@ const _Stripe =  async(req, res) => {
 
     try {
         const paymentIntent = await stripe.paymentIntents.create({
-            _amount,
-            _currency,
+            amount :_amount,
+            currency : _currency,
         });
 
         res.status(200).send({
