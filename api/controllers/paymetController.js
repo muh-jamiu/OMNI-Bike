@@ -52,7 +52,7 @@ const Paypal = (req, res) => {
 
 
 const _Stripe =  async(req, res) => {
-    const { amount, currency } = req.body;
+    const { amount, currency, userId, rentalId } = req.body;
     var _amount = amount ?? 4000 * 100
     var _currency = currency ?? "USD"
 
