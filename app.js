@@ -252,7 +252,7 @@ module.exports = app
 /**
  * @swagger
  * /user/request-password-reset:
- *   patch:
+ *   post:
  *     tags: [Auth]
  *     summary: Request password reset
  *     description: |
