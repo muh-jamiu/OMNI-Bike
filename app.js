@@ -298,12 +298,12 @@ module.exports = app
  *             properties:
  *               code:
  *                 type: number
- *               userId:
+ *               email:
  *                 type: string
  *               password:
  *                 type: string
  *             required:
- *               - userId
+ *               - email
  *               - code
  *               - password
  *     responses:
