@@ -469,13 +469,13 @@ const verifyPasswordReset = (req, res) => {
             })
         }
 
-        if( req.body.userId != data[0].userId){
+        if( req.body.email != data[0].email){
             return res.status(400).json({
                 message : "Invalid code",
             })
         }
 
-        userSchema.findOneAndUpdate({_id : req.body.userId}, {password: req.body.password})
+        userSchema.findOneAndUpdate({email : req.body.email}, {password: req.body.password})
         .then(() => {
             CodeSchema.findOneAndDelete({"code" : req.body.code})
             .then( codeRes => {

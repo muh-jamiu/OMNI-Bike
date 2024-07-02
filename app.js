@@ -296,7 +296,7 @@ module.exports = app
  *           schema:
  *             type: object
  *             properties:
- *               pin:
+ *               code:
  *                 type: number
  *               email:
  *                 type: string
@@ -304,7 +304,7 @@ module.exports = app
  *                 type: string
  *             required:
  *               - email
- *               - pin
+ *               - code
  *               - password
  *     responses:
  *       200:
