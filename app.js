@@ -237,13 +237,13 @@ module.exports = app
  *           schema:
  *             type: object
  *             properties:
- *               OTP:
+ *               code:
  *                 type: string
- *               email:
+ *               userId:
  *                 type: string
  *             required:
- *               - email
- *               - OTP
+ *               - userId
+ *               - code
  *     responses:
  *       200:
  *         description: OTP confirmed successfully
