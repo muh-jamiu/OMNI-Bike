@@ -584,4 +584,6 @@ module.exports = {
     requestCode,
     requestPasswordCode,
     verifyPasswordReset,
+    loginAdmin,
+    createAdmin,
 }
