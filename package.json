@@ -37,6 +37,7 @@
     "multer": "^1.4.5-lts.1",
     "mysql": "^2.18.1",
     "mysql2": "^3.9.0",
+    "noble": "^1.9.1",
     "nodemailer": "^6.9.8",
     "openai": "^4.47.1",
     "paypal-rest-sdk": "^1.8.1",
