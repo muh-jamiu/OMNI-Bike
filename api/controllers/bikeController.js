@@ -103,5 +103,5 @@ const getAllBikes = (req, res) => {
 module.exports = {
     createBike,
     getAllBikes,
-    TextBike,
+    // TextBike,
 }
