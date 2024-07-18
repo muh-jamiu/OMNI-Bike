@@ -57,6 +57,50 @@ const getAllBikes = (req, res) => {
         })
 }
 
+const DeleteBike = (req, res) => {
+    const {id} = req.body
+    bikeSchema.findOneAndDelete({_id : id})
+    .then(result => {
+        if(!result){
+            return res.status(400).json({
+                message: "bike does not exist"
+            })
+        }
+        res.status(200).json({
+            message: "bike has been deleted succesfully"
+        })
+    })
+    .catch(err => {
+        res.status(500).json({
+            message : err
+        })
+    })
+
+   
+}
+
+const UpdateBike = (req, res) => {
+    const {bikeCode, status, station, id} = req.body
+    bikeSchema.findOneAndUpdate({_id : id}, {station:station, status: status, BikeCode:bikeCode})
+    .then(result => {
+        if(!result){
+            return res.status(400).json({
+                message: "Bike does not exist"
+            })
+        }
+        res.status(200).json({
+            message: "Bike has been updated succesfully"
+        })
+    })
+    .catch(err => {
+        res.status(500).json({
+            message : err
+        })
+    })
+
+   
+}
+
 // const TextBike = (req, res) => {
 //     noble.on('stateChange', (state) => {
 //         if (state === 'poweredOn') {
@@ -106,4 +150,6 @@ module.exports = {
     createBike,
     getAllBikes,
     // TextBike,
+    DeleteBike,
+    UpdateBike,
 }
