@@ -2,6 +2,7 @@ const userSchema = require("../model/userSchema")
 const CodeSchema = require("../model/codeSchema")
 const adminSchema = require("../model/adminSchema")
 const reviewSchema = require("../model/reviewSchema")
+const notificationsSchema = require("../model/notificationsSchema")
 const bcrypt = require("bcryptjs")
 const jwt = require("jsonwebtoken")
 var nodemailer = require('nodemailer');
@@ -422,7 +423,7 @@ const getallReviews = (req, res) => {
             })
         }
 
-        return res.status(400).json({
+        return res.status(200).json({
             message : "reviews fetch successfully",
             reviews
         })
@@ -570,6 +571,75 @@ const verifyPasswordReset = (req, res) => {
     })
 }
 
+const DeleteUser = (req, res) => {
+    const {id} = req.body
+    userSchema.findOneAndDelete({_id : id})
+    .then(result => {
+        if(!result){
+            return res.status(400).json({
+                message: "User does not exist"
+            })
+        }
+        res.status(200).json({
+            message: "User has been deleted succesfully"
+        })
+    })
+    .catch(err => {
+        res.status(500).json({
+            message : err
+        })
+    })
+
+   
+}
+
+const CreateNotifications = (req, res) => {
+    const {id, title, message} = req.body
+    const user = new notificationsSchema({
+        user : id,
+        title : title,
+        message: message,
+    })
+
+    user.save()
+    .then(data => {
+        res.status(200).json({
+            message : "Notification created successfully",
+            data,
+        })
+    })
+    .catch( err => {
+        res.status(500).json({
+            message: err
+        })
+    })
+
+   
+}
+
+const getNotifications = (req, res) => {
+    const {id} = req.params
+    notificationsSchema.find({user: id})
+    .populate("user")
+    .then(notifications => {
+        if(notifications.length == 0){
+            return res.status(400).json({
+                message : "there are no notifications",
+            })
+        }
+
+        return res.status(200).json({
+            message : "notifications fetch successfully",
+            notifications
+        })
+    }) 
+    .catch( err => {
+        res.status(500).json({
+            message: err
+        })
+    })
+   
+}
 
 module.exports = {
     createUser, 
@@ -586,4 +656,7 @@ module.exports = {
     verifyPasswordReset,
     loginAdmin,
     createAdmin,
+    DeleteUser,
+    CreateNotifications,
+    getNotifications,
 }
