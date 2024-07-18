@@ -5,7 +5,7 @@ const schema = mongoose.Schema
 const bikesSchema = new schema({
     bikename : {type : String, required : true},
     type : {type : String, required : true},
-    // name : {type : String, required : true},
+    BikeCode : {type : String, required : true},
     description : {type : String, required : true},
     image : {type : String, default : "https://capacity.rentbikesoft.pl/grafiki/oferta/256/65ddeb03ee0d8.png"},
     pricerange : {type : String, required : true},

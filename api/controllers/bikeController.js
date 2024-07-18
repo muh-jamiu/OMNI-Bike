@@ -1,5 +1,5 @@
 const bikeSchema = require("../model/bikeSchema")
-const noble = require('noble');
+// const noble = require('noble');
 // const noble = require('@abandonware/noble');
 
 let connectedPeripheral = null;
@@ -8,7 +8,7 @@ const omniLockUUID = 'YOUR_OMNI_LOCK_UUID';
 const lockCharacteristicUUID = 'YOUR_LOCK_CHARACTERISTIC_UUID';
 
 const createBike = (req, res) => {
-    const { bikename, type, name, description, image, pricerange, telephone, available, pricePerHour, pricePerDay, wheelsize, tires, manufactured } = req.body
+    const { BikeCode, bikename, type, name, description, image, pricerange, telephone, available, pricePerHour, pricePerDay, wheelsize, tires, manufactured } = req.body
     const bike = new bikeSchema({
         bikename,
         type,
@@ -21,7 +21,8 @@ const createBike = (req, res) => {
         pricePerDay,
         wheelsize,
         tires,
-        manufactured
+        manufactured,
+        BikeCode
     })
 
     bike.save()
@@ -54,47 +55,47 @@ const getAllBikes = (req, res) => {
         })
 }
 
-const TextBike = (req, res) => {
-    noble.on('stateChange', (state) => {
-        if (state === 'poweredOn') {
-            noble.startScanning([omniLockUUID], false);
-        } else {
-            noble.stopScanning();
-        }
-    });
+// const TextBike = (req, res) => {
+//     noble.on('stateChange', (state) => {
+//         if (state === 'poweredOn') {
+//             noble.startScanning([omniLockUUID], false);
+//         } else {
+//             noble.stopScanning();
+//         }
+//     });
 
-        noble.on('discover', (peripheral) => {
-        console.log('Discovered:', peripheral.advertisement);
+//         noble.on('discover', (peripheral) => {
+//         console.log('Discovered:', peripheral.advertisement);
 
-        peripheral.connect((error) => {
-            if (error) {
-                console.error('Connection error:', error);
-                res.status(500).send('Failed to connect');
-                return;
-            }
+//         peripheral.connect((error) => {
+//             if (error) {
+//                 console.error('Connection error:', error);
+//                 res.status(500).send('Failed to connect');
+//                 return;
+//             }
 
-            console.log('Connected to', peripheral.uuid);
-            connectedPeripheral = peripheral;
+//             console.log('Connected to', peripheral.uuid);
+//             connectedPeripheral = peripheral;
 
-            peripheral.discoverAllServicesAndCharacteristics((err, services, characteristics) => {
-                if (err) {
-                    console.error('Service discovery error:', err);
-                    res.status(500).send('Failed to discover services');
-                    return;
-                }
+//             peripheral.discoverAllServicesAndCharacteristics((err, services, characteristics) => {
+//                 if (err) {
+//                     console.error('Service discovery error:', err);
+//                     res.status(500).send('Failed to discover services');
+//                     return;
+//                 }
 
-                const lockCharacteristic = characteristics.find(char => char.uuid === lockCharacteristicUUID);
+//                 const lockCharacteristic = characteristics.find(char => char.uuid === lockCharacteristicUUID);
 
-                if (lockCharacteristic) {
-                    res.status(200).send('Connected successfully');
-                } else {
-                    res.status(404).send('Lock characteristic not found');
-                }
-            });
-        });
-    });
+//                 if (lockCharacteristic) {
+//                     res.status(200).send('Connected successfully');
+//                 } else {
+//                     res.status(404).send('Lock characteristic not found');
+//                 }
+//             });
+//         });
+//     });
 
-}
+// }
 
 
 
