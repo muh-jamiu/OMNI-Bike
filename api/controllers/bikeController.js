@@ -8,7 +8,7 @@ const omniLockUUID = 'YOUR_OMNI_LOCK_UUID';
 const lockCharacteristicUUID = 'YOUR_LOCK_CHARACTERISTIC_UUID';
 
 const createBike = (req, res) => {
-    const { BikeCode, bikename, type, name, description, image, pricerange, telephone, available, pricePerHour, pricePerDay, wheelsize, tires, manufactured } = req.body
+    const {status, station,  BikeCode, bikename, type, name, description, image, pricerange, telephone, available, pricePerHour, pricePerDay, wheelsize, tires, manufactured } = req.body
     const bike = new bikeSchema({
         bikename,
         type,
@@ -22,7 +22,9 @@ const createBike = (req, res) => {
         wheelsize,
         tires,
         manufactured,
-        BikeCode
+        BikeCode,
+        status,
+        station,
     })
 
     bike.save()
