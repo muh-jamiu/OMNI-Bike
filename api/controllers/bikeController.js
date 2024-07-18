@@ -1,5 +1,5 @@
 const bikeSchema = require("../model/bikeSchema")
-// const noble = require('noble');
+const noble = require('noble');
 // const noble = require('@abandonware/noble');
 
 let connectedPeripheral = null;
