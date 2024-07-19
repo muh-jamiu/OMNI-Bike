@@ -1,6 +1,6 @@
 const bikeSchema = require("../model/bikeSchema")
 // const noble = require('noble');
-// const noble = require('@abandonware/noble');
+const noble = require('@abandonware/bluetooth-hci-socket');
 
 let connectedPeripheral = null;
 
@@ -101,47 +101,70 @@ const UpdateBike = (req, res) => {
    
 }
 
-// const TextBike = (req, res) => {
-//     noble.on('stateChange', (state) => {
-//         if (state === 'poweredOn') {
-//             noble.startScanning([omniLockUUID], false);
-//         } else {
-//             noble.stopScanning();
-//         }
-//     });
+const TextBike = (req, res) => {
+    var bluetoothHciSocket = new noble();
+    var filter = Buffer.alloc(14);
+    bluetoothHciSocket.setFilter(filter);
+    bluetoothHciSocket.bindUser(0x0A2B);
+    bluetoothHciSocket.start()
+    var isDevUp = bluetoothHciSocket.isDevUp()
 
-//         noble.on('discover', (peripheral) => {
-//         console.log('Discovered:', peripheral.advertisement);
+    bluetoothHciSocket.on('error', function(error) {
+      console.log("error" , error)
+    });
 
-//         peripheral.connect((error) => {
-//             if (error) {
-//                 console.error('Connection error:', error);
-//                 res.status(500).send('Failed to connect');
-//                 return;
-//             }
+    bluetoothHciSocket.on('data', function(data) {
+       console.log(data)
+    });
 
-//             console.log('Connected to', peripheral.uuid);
-//             connectedPeripheral = peripheral;
 
-//             peripheral.discoverAllServicesAndCharacteristics((err, services, characteristics) => {
-//                 if (err) {
-//                     console.error('Service discovery error:', err);
-//                     res.status(500).send('Failed to discover services');
-//                     return;
-//                 }
+    return res.status(200).json({
+        message: "Bikes fetched successfully",
+        Bikes: filter,
+        bluetoothHciSocket: bluetoothHciSocket,
+        isDevUp,
+    })
 
-//                 const lockCharacteristic = characteristics.find(char => char.uuid === lockCharacteristicUUID);
+    noble.on('stateChange', (state) => {
+        if (state === 'poweredOn') {
+            noble.startScanning([omniLockUUID], false);
+        } else {
+            noble.stopScanning();
+        }
+    });
 
-//                 if (lockCharacteristic) {
-//                     res.status(200).send('Connected successfully');
-//                 } else {
-//                     res.status(404).send('Lock characteristic not found');
-//                 }
-//             });
-//         });
-//     });
+        noble.on('discover', (peripheral) => {
+        console.log('Discovered:', peripheral.advertisement);
 
-// }
+        peripheral.connect((error) => {
+            if (error) {
+                console.error('Connection error:', error);
+                res.status(500).send('Failed to connect');
+                return;
+            }
+
+            console.log('Connected to', peripheral.uuid);
+            connectedPeripheral = peripheral;
+
+            peripheral.discoverAllServicesAndCharacteristics((err, services, characteristics) => {
+                if (err) {
+                    console.error('Service discovery error:', err);
+                    res.status(500).send('Failed to discover services');
+                    return;
+                }
+
+                const lockCharacteristic = characteristics.find(char => char.uuid === lockCharacteristicUUID);
+
+                if (lockCharacteristic) {
+                    res.status(200).send('Connected successfully');
+                } else {
+                    res.status(404).send('Lock characteristic not found');
+                }
+            });
+        });
+    });
+
+}
 
 
 
@@ -149,7 +172,7 @@ const UpdateBike = (req, res) => {
 module.exports = {
     createBike,
     getAllBikes,
-    // TextBike,
+    TextBike,
     DeleteBike,
     UpdateBike,
 }
