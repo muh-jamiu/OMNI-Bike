@@ -1,10 +1,10 @@
 const bikeSchema = require("../model/bikeSchema")
-// const noble = require('noble');
-const noble = require('@abandonware/bluetooth-hci-socket');
+const noble = require('noble');
+// const noble = require('@abandonware/bluetooth-hci-socket');
 
 let connectedPeripheral = null;
 
-const omniLockUUID = 'YOUR_OMNI_LOCK_UUID';
+const omniLockUUID = '1697681544';
 const lockCharacteristicUUID = 'YOUR_LOCK_CHARACTERISTIC_UUID';
 
 const createBike = (req, res) => {
@@ -102,38 +102,51 @@ const UpdateBike = (req, res) => {
 }
 
 const TextBike = (req, res) => {
-    var bluetoothHciSocket = new noble();
-    var filter = Buffer.alloc(14);
-    bluetoothHciSocket.setFilter(filter);
-    bluetoothHciSocket.bindUser(0x0A2B);
-    bluetoothHciSocket.start()
-    var isDevUp = bluetoothHciSocket.isDevUp()
+    // var bluetoothHciSocket = new noble();
+    // var filter = Buffer.alloc(14);
+    // bluetoothHciSocket.setFilter(filter);
+    // bluetoothHciSocket.bindUser(0x0A2B);
+    // bluetoothHciSocket.start()
+    // var isDevUp = bluetoothHciSocket.isDevUp()
 
-    bluetoothHciSocket.on('error', function(error) {
-      console.log("error" , error)
-    });
+    // bluetoothHciSocket.on('error', function(error) {
+    //   console.log("error" , error)
+    // });
 
-    bluetoothHciSocket.on('data', function(data) {
-       console.log(data)
-    });
+    // bluetoothHciSocket.on('data', function(data) {
+    //    console.log(data)
+    // });
 
 
-    return res.status(200).json({
-        message: "Bikes fetched successfully",
-        Bikes: filter,
-        bluetoothHciSocket: bluetoothHciSocket,
-        isDevUp,
-    })
+    // return res.status(200).json({
+    //     message: "Bikes fetched successfully",
+    //     Bikes: filter,
+    //     bluetoothHciSocket: bluetoothHciSocket,
+    //     isDevUp,
+    // })
 
     noble.on('stateChange', (state) => {
+        console.log(state)
         if (state === 'poweredOn') {
-            noble.startScanning([omniLockUUID], false);
+            noble.startScanning([], false);
+            console.log("start scanning")
         } else {
             noble.stopScanning();
+            console.log("stop scanning")
         }
     });
 
-        noble.on('discover', (peripheral) => {
+    noble.on('scanStart', (state) => {
+        console.log("scan start: ", state)
+    });
+
+    noble.on('scanStop', (state) => {
+        console.log("scan stop: ", state)
+    });
+    
+    
+
+    noble.on('discover', (peripheral) => {
         console.log('Discovered:', peripheral.advertisement);
 
         peripheral.connect((error) => {
