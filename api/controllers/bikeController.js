@@ -105,13 +105,12 @@ const TextBike = (req, res) => {
     const {key} = req.body
     if(key != omniLockUUID){
         return  res.status(400).json({
-            message: "Invalid lock code connection was establish"
+            message: "Invalid lock device code connection was establish"
         })
     }
 
-    return  res.status(200).json({
-        message: "Device is connected",
-        uuid: "omniLockUUID"
+    return  res.status(400).json({
+        message: "Error while connecting: Device is out of range",
     })
 
     noble.on('stateChange', (state) => {
