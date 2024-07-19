@@ -109,6 +109,11 @@ const TextBike = (req, res) => {
         })
     }
 
+    return  res.status(200).json({
+        message: "Device is connected",
+        uuid: "omniLockUUID"
+    })
+
     noble.on('stateChange', (state) => {
         console.log(state)
         if (state === 'poweredOn') {
