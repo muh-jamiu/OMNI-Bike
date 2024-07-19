@@ -102,28 +102,12 @@ const UpdateBike = (req, res) => {
 }
 
 const TextBike = (req, res) => {
-    // var bluetoothHciSocket = new noble();
-    // var filter = Buffer.alloc(14);
-    // bluetoothHciSocket.setFilter(filter);
-    // bluetoothHciSocket.bindUser(0x0A2B);
-    // bluetoothHciSocket.start()
-    // var isDevUp = bluetoothHciSocket.isDevUp()
-
-    // bluetoothHciSocket.on('error', function(error) {
-    //   console.log("error" , error)
-    // });
-
-    // bluetoothHciSocket.on('data', function(data) {
-    //    console.log(data)
-    // });
-
-
-    // return res.status(200).json({
-    //     message: "Bikes fetched successfully",
-    //     Bikes: filter,
-    //     bluetoothHciSocket: bluetoothHciSocket,
-    //     isDevUp,
-    // })
+    const {key} = req.body
+    if(key != omniLockUUID){
+        return  res.status(400).json({
+            message: "Invalid lock code connection was establish"
+        })
+    }
 
     noble.on('stateChange', (state) => {
         console.log(state)
