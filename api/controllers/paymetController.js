@@ -6,6 +6,7 @@ const stripe = Stripe(process.env.STRIPE_SECRET_KEY ?? "N/A");
 
 
 const Paypal = (req, res) => {
+  const {amount, userId} = req.body
 
   const create_payment_json = {
     "intent": "sale",
@@ -13,24 +14,24 @@ const Paypal = (req, res) => {
       "payment_method": "paypal"
     },
     "redirect_urls": {
-      "return_url": "http://return.url/success",
-      "cancel_url": "http://cancel.url/cancel"
+      "return_url": "https://electric-bike-rental.onrender.com/payment/success-paypal",
+      "cancel_url": "https://electric-bike-rental.onrender.com/payment/cancel-paypal"
     },
     "transactions": [{
       "item_list": {
         "items": [{
-          "name": "item",
-          "sku": "item",
-          "price": "1.00",
+          "name": "Rental",
+          "sku": "Bike",
+          "price": amount ?? "1.00",
           "currency": "USD",
           "quantity": 1
         }]
       },
       "amount": {
         "currency": "USD",
-        "total": "1.00"
+        "total": amount ??  "1.00"
       },
-      "description": "This is the payment description."
+      "description": "Payment for bike rental services"
     }]
   };
   
@@ -40,15 +41,23 @@ const Paypal = (req, res) => {
       console.error(error);
       res.status(500).send(error);
     } else {
-       return  res.status(200).send("payment");
       for(let i = 0; i < payment.links.length; i++) {
         if (payment.links[i].rel === 'approval_url') {
+          return  res.status(200).json({redirect_url: payment.links[i] });
           res.redirect(payment.links[i].href);
         }
       }
     }
   });
 };
+
+const CancelUrl = async (req, res) => {
+  return  res.status(500).json({message: "Transaction was not completed" });
+}
+
+const successUrl = async (req, res) => {
+  return  res.status(200).json({message: "Transaction is completed successfully" });
+}
 
 
 const _Stripe =  async(req, res) => {
@@ -72,10 +81,10 @@ const _Stripe =  async(req, res) => {
     }
 };
 
-
-
 module.exports = {
     Paypal,
     _Stripe,
+    CancelUrl,
+    successUrl,
 };
 

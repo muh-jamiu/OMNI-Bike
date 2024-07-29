@@ -329,7 +329,8 @@ const UpdateUser = (req, res) => {
             })
         }
         res.status(200).json({
-            message: "User has been updated succesfully"
+            message: "User has been updated succesfully",
+            data: result
         })
     })
     .catch(err => {
