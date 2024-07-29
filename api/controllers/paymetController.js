@@ -43,7 +43,7 @@ const Paypal = (req, res) => {
     } else {
       for(let i = 0; i < payment.links.length; i++) {
         if (payment.links[i].rel === 'approval_url') {
-          return  res.status(200).json({redirect_url: payment.links[i] });
+          return  res.status(200).json({redirect_url: payment.links[i].href });
           res.redirect(payment.links[i].href);
         }
       }
