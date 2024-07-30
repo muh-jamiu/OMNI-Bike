@@ -805,7 +805,7 @@ module.exports = app
  *     summary:  Pay with Paypal
  *     description: |
  *       This endpoint help users to use paypal as their payment method
- *         - rentId: The rental ID user wanted to make payment for . This field is required.
+ *         - amount: The rental ID user wanted to make payment for . This field is required.
  *         - userId: The user ID. This field is required.
  *       
  *     requestBody:
@@ -816,12 +816,12 @@ module.exports = app
  *           schema:
  *             type: object
  *             properties:
- *               rentId:
+ *               amount:
  *                 type: string
  *               userId:
  *                 type: string
  *             required:
- *               - rentId
+ *               - amount
  *               - userId
  *     responses:
  *       200:
