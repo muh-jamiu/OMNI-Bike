@@ -8,7 +8,7 @@ const axios = require('axios');
 const userSchema = require("../model/userSchema")
 
 const Paypal = (req, res) => {
-  const {amount, userId} = req.body
+  const {amount, userId, rentId} = req.body
 
   userSchema.find({_id : userId})
   .then(user => {
