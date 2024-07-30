@@ -43,7 +43,12 @@ const rentBike = (req, res) => {
     })
 }
 
-const userRentHistory = (req, res) => {    
+const userRentHistory = (req, res) => {   
+    return  res.status(200).json({
+        message : "User History is fetched successfully",
+        data: []
+    }) 
+    
     const {userId} = req.body
     rentalSchemaSchema.find({user: userId})
     .populate("bike")
