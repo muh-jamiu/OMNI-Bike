@@ -6,6 +6,7 @@ route.post("/paypal", paymetController.Paypal)
 route.post("/stripe", paymetController._Stripe)
 route.get("/cancel-paypal", paymetController.CancelUrl)
 route.get("/success-paypal", paymetController.successUrl)
+route.get("/balance", paymetController.balanace)
 
 
 module.exports = route
