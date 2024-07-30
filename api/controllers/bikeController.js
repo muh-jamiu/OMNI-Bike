@@ -8,6 +8,9 @@ const omniLockUUID = '1697681544';
 const lockCharacteristicUUID = 'YOUR_LOCK_CHARACTERISTIC_UUID';
 
 const createBike = (req, res) => {
+    return res.status(500).json({
+        message: "error"
+    })
     const {status, station,  BikeCode, bikename, type, name, description, image, pricerange, telephone, available, pricePerHour, pricePerDay, wheelsize, tires, manufactured } = req.body
     const bike = new bikeSchema({
         bikename,
@@ -42,6 +45,11 @@ const createBike = (req, res) => {
 }
 
 const getAllBikes = (req, res) => {
+    return res.status(200).json({
+        message: "Bikes fetched successfully",
+        Bikes: []
+    })
+
     bikeSchema.find()
         .sort({ "createdAt": "desc" })
         .then(data => {
