@@ -151,9 +151,6 @@ const createAdmin = (req, res) => {
 }
 
 const loginAdmin = (req, res) => {
-    return res.status(500).json({
-        message : "No more resources"
-    })
 
     adminSchema.find({email : req.body.email})
     .then(user => {
