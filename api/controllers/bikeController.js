@@ -45,11 +45,6 @@ const createBike = (req, res) => {
 }
 
 const getAllBikes = (req, res) => {
-    return res.status(200).json({
-        message: "Bikes fetched successfully",
-        Bikes: []
-    })
-
     bikeSchema.find()
         .sort({ "createdAt": "desc" })
         .then(data => {
