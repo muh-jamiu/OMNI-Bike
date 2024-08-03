@@ -283,12 +283,7 @@ const loginUser = (req, res) => {
 
 }
 
-const getAllUser = (req, res) => {
-    return  res.status(200).json({
-        message : "users fetched successfully",
-        users : []
-    })
-    
+const getAllUser = (req, res) => {    
    userSchema.find()
    .sort({"createdAt" : "desc"})
    .then(data => {
