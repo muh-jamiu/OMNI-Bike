@@ -182,6 +182,51 @@ const loginAdmin = (req, res) => {
 
 }
 
+const UpdateAdmin = (req, res) => {
+    const {fullname, email, password} = req.body
+    if(password){
+        bcrypt.hash(req.body.password, 10, (err, hash) => {
+            if(hash){
+                adminSchema.findOneAndUpdate({_id : id}, {fullname:fullname, password: hash, email:email })
+                .then(result => {
+                    if(!result){
+                        return res.status(400).json({
+                            message: "admin does not exist"
+                        })
+                    }
+                    res.status(200).json({
+                        message: "admin has been updated succesfully",
+                        data: result
+                    })
+                })
+                .catch(err => {
+                    res.status(500).json({
+                        message : err
+                    })
+                })    
+            }
+        }
+        );
+    }else{
+    adminSchema.findOneAndUpdate({_id : id}, {fullname:fullname, email:email })
+    .then(result => {
+        if(!result){
+            return res.status(400).json({
+                message: "admin does not exist"
+            })
+        }
+        res.status(200).json({
+            message: "admin has been updated succesfully",
+            data: result
+        })
+    })
+    .catch(err => {
+        res.status(500).json({
+            message : err
+        })
+    }) }  
+}
+
 
 const createUser = (req, res) => {
     userSchema.find({email : req.body.email})
@@ -661,4 +706,5 @@ module.exports = {
     DeleteUser,
     CreateNotifications,
     getNotifications,
+    UpdateAdmin,
 }
