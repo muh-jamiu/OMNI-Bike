@@ -5,6 +5,7 @@ const net = require('net');
 let connectedPeripheral = null;
 
 const omniLockUUID = '1697681544';
+const omniLockUUID1 = '860537066127309';
 const lockCharacteristicUUID = 'YOUR_LOCK_CHARACTERISTIC_UUID';
 
 const createBike = (req, res) => {
@@ -174,21 +175,22 @@ const newBike = (res , req) => {
     const deviceIp = 'www.omnibike.net'; // Replace with the actual IP of the Omni device
     const devicePort = 9686; // Replace with the actual port
     const time_ = getCurrentFormattedDateTime()
+    const deviceIp2 = 'iot.omnibike.net';
+    const devicePort2 = 9682;
 
     // Create a TCP client
     const client = new net.Socket();
 
-    client.connect(devicePort, deviceIp, () => {
+    client.connect(devicePort2, deviceIp2, () => {
         console.log('Connected to Omni device');
 
         // Command to send to the Omni device (e.g., unlock command)
-        const command = `*CMDR,OM,${omniLockUUID},${time_},L0,0,1234,1497689816#<LF>`; // The command format depends on the Omni protocol
-        client.write(command, () => {
-            console.log('Command sent:', command, time_, );
-        });
-        
+        const command = `0xFFFF*CMDR,OM,${omniLockUUID1},${time_},L0,0,1234,1497689816#<LF>`; // The command format depends on the Omni protocol
+        var a = client.write(command, "utf8", (() => {
+            console.log('Command sent:', command, time_ );
+        }));
         // var a = client.address()
-        // console.log( a)
+        console.log( a)
     });
 
     client.on('data', (data) => {
