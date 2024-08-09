@@ -12,7 +12,7 @@ const io = socketIo(server);
 const dbUrl = "mongodb+srv://larvish:larvish007@bikerental.s41h64o.mongodb.net/?retryWrites=true&w=majority&appName=bikeRental"
 mongoose.connect(dbUrl)
 .then(
-    server.listen(3000,() => {
+    server.listen(3100,() => {
         console.log("App is running in port 3000")
         io.on('connection', (socket) => {
             console.log('a user connected');

@@ -1,7 +1,7 @@
 const bikeSchema = require("../model/bikeSchema")
 // const noble = require('noble');
 // const noble = require('@abandonware/bluetooth-hci-socket');
-
+const net = require('net');
 let connectedPeripheral = null;
 
 const omniLockUUID = '1697681544';
@@ -170,6 +170,62 @@ const TextBike = (req, res) => {
 
 }
 
+const newBike = (res , req) => {
+    const deviceIp = 'www.omnibike.net'; // Replace with the actual IP of the Omni device
+    const devicePort = 9686; // Replace with the actual port
+    const time_ = getCurrentFormattedDateTime()
+
+    // Create a TCP client
+    const client = new net.Socket();
+
+    client.connect(devicePort, deviceIp, () => {
+        console.log('Connected to Omni device');
+
+        // Command to send to the Omni device (e.g., unlock command)
+        const command = `*CMDR,OM,${omniLockUUID},${time_},L0,0,1234,1497689816#<LF>`; // The command format depends on the Omni protocol
+        client.write(command, () => {
+            console.log('Command sent:', command, time_, );
+        });
+        
+        // var a = client.address()
+        // console.log( a)
+    });
+
+    client.on('data', (data) => {
+        console.log('Received:', data.toString());
+    
+        // Close the connection after receiving a response
+        client.destroy();
+    });
+    
+    client.on('close', () => {
+        console.log('Connection closed');
+    });
+    
+    client.on('error', (err) => {
+        console.error('Error:', err);
+    });
+}
+
+function getCurrentFormattedDateTime() {
+    const now = new Date();
+
+    // Extract date components
+    const year = now.getFullYear().toString().slice(-2); // Get last two digits of the year
+    const month = ('0' + (now.getMonth() + 1)).slice(-2); // Month is zero-based, so add 1 and pad with zero if necessary
+    const day = ('0' + now.getDate()).slice(-2); // Get day and pad with zero if necessary
+
+    // Extract time components
+    const hours = ('0' + now.getHours()).slice(-2); // Get hours and pad with zero if necessary
+    const minutes = ('0' + now.getMinutes()).slice(-2); // Get minutes and pad with zero if necessary
+    const seconds = ('0' + now.getSeconds()).slice(-2); // Get seconds and pad with zero if necessary
+
+    // Combine all components into the desired format
+    const formattedDateTime = `${year}${month}${day}${hours}${minutes}${seconds}`;
+
+    return formattedDateTime;
+}
+
 
 
 
@@ -179,4 +235,5 @@ module.exports = {
     TextBike,
     DeleteBike,
     UpdateBike,
+    newBike
 }

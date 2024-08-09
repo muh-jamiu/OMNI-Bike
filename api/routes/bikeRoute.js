@@ -6,7 +6,7 @@ route.post("/", bikeController.getAllBikes)
 route.post("/create", bikeController.createBike)
 route.post("/update", bikeController.UpdateBike)
 route.post("/delete", bikeController.DeleteBike)
-route.post("/lock-connect", bikeController.TextBike)
+route.post("/connect", bikeController.newBike)
 
 
 module.exports = route
