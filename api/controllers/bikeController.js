@@ -2,6 +2,7 @@ const bikeSchema = require("../model/bikeSchema")
 // const noble = require('noble');
 // const noble = require('@abandonware/bluetooth-hci-socket');
 const net = require('net');
+const crypto = require('crypto');
 let connectedPeripheral = null;
 
 const omniLockUUID = '1697681544';
@@ -185,12 +186,12 @@ const newBike = (res , req) => {
         console.log('Connected to Omni device');
 
         // Command to send to the Omni device (e.g., unlock command)
-        const command = `0xFFFF*CMDR,OM,${omniLockUUID1},${time_},L0,0,1234,1497689816#<LF>`; // The command format depends on the Omni protocol
+        const command = `0xFFFF*CMDR,OM,${omniLockUUID1},${time_},L0,0,1234<LF>`; // The command format depends on the Omni protocol
         var a = client.write(command, "utf8", (() => {
             console.log('Command sent:', command, time_ );
         }));
-        // var a = client.address()
-        console.log( a)
+        var ar = client.address()
+        console.log( a, ar)
     });
 
     client.on('data', (data) => {
@@ -228,6 +229,35 @@ function getCurrentFormattedDateTime() {
     return formattedDateTime;
 }
 
+const hash_ = (res, req) => {
+    let jsonStr = `{
+        "pageSize": "100000",
+        "pageNum": "1",
+        "equipmentId": "860537066127309",
+        "developerId": "1793307875029913601",
+        "startTime": "1718317980",
+        "endTime": "1718873787"
+    }`;
+
+    let params = JSON.parse(jsonStr);
+    let sortedParams = Object.keys(params).sort().map(key => `${key}=${params[key]}`).join('&');
+
+    let secretKey = '412eb6db2a704a27b385868075fcf720';
+    let dataToHash = `${sortedParams}&key=${secretKey}`;
+
+    let hash = crypto.createHash('md5').update(dataToHash).digest('hex');
+
+    console.log(hash);
+    // return  res.status(200).json({
+    //     message: hash,
+    // })
+}
+
+const establish = (req, res) => {
+    return res.status(200).json({
+        code: "200",
+    })
+}
 
 
 
@@ -237,5 +267,7 @@ module.exports = {
     TextBike,
     DeleteBike,
     UpdateBike,
-    newBike
+    newBike,
+    hash_,
+    establish
 }
