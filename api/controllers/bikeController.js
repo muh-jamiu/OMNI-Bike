@@ -257,7 +257,7 @@ const unlockDevice = async (req, res) => {
          // Data to be sent in the POST request
         const postData = {
             "developerId" : "1793307875029913601", 
-            "sign": "8fd0fd891a0a9b8772fea876a43497d4",
+            "sign": hash,
             "command": "L0",
             "imei": "860537066127309"
         };
