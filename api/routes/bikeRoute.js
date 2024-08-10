@@ -7,7 +7,8 @@ route.post("/create", bikeController.createBike)
 route.post("/update", bikeController.UpdateBike)
 route.post("/delete", bikeController.DeleteBike)
 route.post("/connect", bikeController.newBike)
-route.post("/hash", bikeController.hash_)
+route.post("/unlockDevice", bikeController.unlockDevice)
+route.post("/lockDevice", bikeController.lockDevice)
 route.post("/establish", bikeController.establish)
 
 

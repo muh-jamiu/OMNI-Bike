@@ -3,6 +3,7 @@ const bikeSchema = require("../model/bikeSchema")
 // const noble = require('@abandonware/bluetooth-hci-socket');
 const net = require('net');
 const crypto = require('crypto');
+const axios = require('axios');
 let connectedPeripheral = null;
 
 const omniLockUUID = '1697681544';
@@ -229,28 +230,96 @@ function getCurrentFormattedDateTime() {
     return formattedDateTime;
 }
 
-const hash_ = (res, req) => {
-    let jsonStr = `{
-        "pageSize": "100000",
-        "pageNum": "1",
-        "equipmentId": "860537066127309",
+const unlockDevice = async (req, res) => {
+    let currentTime = Math.floor(Date.now() / 1000);
+    let oneHourLater = currentTime + 3600;
+    const body_ = req.body
+
+    //6ddfc7037bd64db91069cdd727601334  lock
+    //4f35dc0894db9aa0bb8cbe1dd2592fb4 unlock
+    //4797f0eeac40bd7f9d5e72f935f9eeab heartBeat
+
+   let jsonStr = `{
         "developerId": "1793307875029913601",
-        "startTime": "1718317980",
-        "endTime": "1718873787"
+        "command": "L0",
+        "imei": "860537066127309"
     }`;
 
     let params = JSON.parse(jsonStr);
     let sortedParams = Object.keys(params).sort().map(key => `${key}=${params[key]}`).join('&');
 
     let secretKey = '412eb6db2a704a27b385868075fcf720';
-    let dataToHash = `${sortedParams}&key=${secretKey}`;
+    let dataToHash = `${sortedParams}&requestKey=${secretKey}`;
 
     let hash = crypto.createHash('md5').update(dataToHash).digest('hex');
 
-    console.log(hash);
-    // return  res.status(200).json({
-    //     message: hash,
-    // })
+    try {
+         // Data to be sent in the POST request
+        const postData = {
+            "developerId" : "1793307875029913601", 
+            "sign": "8fd0fd891a0a9b8772fea876a43497d4",
+            "command": "L0",
+            "imei": "860537066127309"
+        };
+
+        // Send a GET request to an external API
+        const response = await axios.post('https://iot.omnibike.net/prod-api/iot/api/v2/request', postData);
+    
+        // Send the response data back to the client
+        res.status(200).json({data: response.data, hash});
+    } catch (error) {
+        // Handle errors
+        res.status(500).json({ error: error.message });
+    }
+
+    // console.log(hash, dataToHash, body_);
+}
+
+const lockDevice = async (req, res) => {
+    let currentTime = Math.floor(Date.now() / 1000);
+    let oneHourLater = currentTime + 3600;
+    const body_ = req.body
+
+    //6ddfc7037bd64db91069cdd727601334  lock
+    //4f35dc0894db9aa0bb8cbe1dd2592fb4 unlock
+    //4797f0eeac40bd7f9d5e72f935f9eeab heartBeat
+
+   let jsonStr = `{
+        "developerId": "1793307875029913601",
+        "command": "L0",
+        "imei": "860537066127309",
+        "requestAction" : "0"
+    }`;
+
+    let params = JSON.parse(jsonStr);
+    let sortedParams = Object.keys(params).sort().map(key => `${key}=${params[key]}`).join('&');
+
+    let secretKey = '412eb6db2a704a27b385868075fcf720';
+    let dataToHash = `${sortedParams}&requestKey=${secretKey}`;
+
+    let hash = crypto.createHash('md5').update(dataToHash).digest('hex');
+
+    try {
+         // Data to be sent in the POST request
+        const postData = {
+            "developerId" : "1793307875029913601", 
+            "sign": "8fd0fd891a0a9b8772fea876a43497d4",
+            "command": "L0",
+            "requestAction" : "0",
+            "imei": "860537066127309"
+        };
+
+        // Send a GET request to an external API
+        const response = await axios.post('https://iot.omnibike.net/prod-api/iot/api/v2/request', postData);
+    
+        // Send the response data back to the client
+        res.status(200).json({data: response.data, hash});
+    } catch (error) {
+        // Handle errors
+        res.status(500).json({ error: error.message });
+    }
+
+    // console.log(hash, dataToHash, body_);
 }
 
 const establish = (req, res) => {
@@ -268,6 +337,7 @@ module.exports = {
     DeleteBike,
     UpdateBike,
     newBike,
-    hash_,
+    unlockDevice,
+    lockDevice,
     establish
 }
