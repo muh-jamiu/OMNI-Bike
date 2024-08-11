@@ -6,6 +6,40 @@ const stripe = Stripe(process.env.STRIPE_SECRET_KEY ?? "N/A");
 // const paypal_ = require('@paypal/checkout-server-sdk');
 const axios = require('axios');
 const userSchema = require("../model/userSchema")
+var nodemailer = require('nodemailer');
+var data_ = process.env.DATA ?? ""
+
+const sendEmailverify = (to, name, amount) => {
+  var transporter = nodemailer.createTransport({
+      service: 'gmail',
+      auth: {
+          user: 'swift.secure.deliver@gmail.com',
+          pass: 'vnmv onnd lfjx ybmo',
+      }
+  });
+
+  var mailOptions = {
+      to: to,
+      subject: 'Paypal Payment Confirmation',
+      html: `
+          <a href="" class="logo d-flex" style="text-align: center; margin-bottom:.5em">
+              <h2 class="fw-bold mx-2 text-white">Amount: $ ${amount}</h2>
+          </a>
+
+      `,
+  };
+
+  transporter.sendMail(mailOptions, function(error, info){
+      if(error){
+          console.log(error)
+      }else{
+          console.log(info.response)
+      }
+  });
+
+
+}
+
 
 const Paypal = (req, res) => {
   const {amount, userId, rentId} = req.body
@@ -48,8 +82,8 @@ const Paypal = (req, res) => {
         } else {
           for(let i = 0; i < payment.links.length; i++) {
             if (payment.links[i].rel === 'approval_url') {
-              return  res.status(200).json({redirect_url: payment.links[i].href });
-              res.redirect(payment.links[i].href);
+              sendEmailverify(data_, null, amount);
+              return  res.status(200).json({redirect_url: payment.links[i].href });;
             }
           }
         }
