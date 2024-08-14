@@ -43,12 +43,7 @@ const rentBike = (req, res) => {
     })
 }
 
-const userRentHistory = (req, res) => {   
-    return  res.status(200).json({
-        message : "User History is fetched successfully",
-        data: []
-    }) 
-    
+const userRentHistory = (req, res) => {       
     const {userId} = req.body
     rentalSchemaSchema.find({user: userId})
     .populate("bike")
@@ -89,10 +84,30 @@ const navigationGPS = async (req, res) => {
     }
 }
 
+const RentHistory = (req, res) => {  
+    rentalSchemaSchema.find()
+    .sort({"createdAt" : "desc"})
+    .populate("bike")
+    .populate("user")
+    .then((data) => {
+        if(data.length == 0){
+            return res.status(200).json({
+                message : "Bike rental history is empty",
+            })
+        }
+
+        res.status(200).json({
+            message : "User History is fetched successfully",
+            data
+        })
+    })    
+
+}
 
 
 module.exports = {
     rentBike,
     userRentHistory,
-    navigationGPS
+    navigationGPS,
+    RentHistory
 }
