@@ -10,6 +10,34 @@ const omniLockUUID = '1697681544';
 const omniLockUUID1 = '860537066127309';
 const lockCharacteristicUUID = 'YOUR_LOCK_CHARACTERISTIC_UUID';
 
+const devices = [
+    {
+      KEY: "1697681544",
+      IMEI: "860537066127309"
+    },
+    {
+      KEY: "1697681541",
+      IMEI: "860537066144981"
+    },
+    {
+      KEY: "1697681545",
+      IMEI: "860537066127648"
+    },
+    {
+      KEY: "1697681543",
+      IMEI: "860537066127960"
+    },
+    {
+      KEY: "1697681540",
+      IMEI: "860537066127523"
+    },
+    {
+      KEY: "1697681542",
+      IMEI: "861005070212227"
+    }
+  ];
+  
+
 const createBike = (req, res) => {
     return res.status(500).json({
         message: "error"
@@ -233,16 +261,19 @@ function getCurrentFormattedDateTime() {
 const unlockDevice = async (req, res) => {
     let currentTime = Math.floor(Date.now() / 1000);
     let oneHourLater = currentTime + 3600;
-    const body_ = req.body
+    const {key} = req.body
 
-    //6ddfc7037bd64db91069cdd727601334  lock
-    //4f35dc0894db9aa0bb8cbe1dd2592fb4 unlock
-    //4797f0eeac40bd7f9d5e72f935f9eeab heartBeat
+
+    const device = devices.find(device => device.KEY === key);
+
+    if(!device){
+        return res.status(404).json({"message" : "Device does not exist"})
+    }
 
    let jsonStr = `{
         "developerId": "1793307875029913601",
         "command": "L0",
-        "imei": "860537066127309"
+        "imei": ${device.IMEI}
     }`;
 
     let params = JSON.parse(jsonStr);
@@ -259,14 +290,14 @@ const unlockDevice = async (req, res) => {
             "developerId" : "1793307875029913601", 
             "sign": hash,
             "command": "L0",
-            "imei": "860537066127309"
+            "imei":  device.IMEI
         };
 
         // Send a GET request to an external API
         const response = await axios.post('https://iot.omnibike.net/prod-api/iot/api/v2/request', postData);
     
         // Send the response data back to the client
-        res.status(200).json({data: response.data, hash});
+        res.status(200).json({data: response.data, hash, device});
     } catch (error) {
         // Handle errors
         res.status(500).json({ error: error.message });
