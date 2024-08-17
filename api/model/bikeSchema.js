@@ -7,7 +7,7 @@ const bikesSchema = new schema({
     type : {type : String},
     BikeCode : {type : String},
     status : {type : String},
-    description : {type : String},
+    description : {type : String, default : "Available"},
     image : {type : String, default : "https://capacity.rentbikesoft.pl/grafiki/oferta/256/65ddeb03ee0d8.png"},
     pricerange : {type : String},
     telephone : {type : String},

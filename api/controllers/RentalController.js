@@ -4,7 +4,7 @@ const axios = require('axios');
 
 const rentBike = (req, res) => {
     const {user, bike, rentHr, expiretime} = req.body
-    bikeSchema.find({_id: bike})
+    bikeSchema.find({BikeCode: bike})
     .then(data => {
         if(data.length == 0){
             return res.status(400).json({
@@ -22,12 +22,13 @@ const rentBike = (req, res) => {
             user,
             bike,
             rentHr,
-            expiretime
+            expiretime,
+            status: "In Progress"
         })
     
         rent.save()
         .then(() => {
-            bikeSchema.findOneAndUpdate({_id: bike}, {available: false})
+            bikeSchema.findOneAndUpdate({BikeCode: bike}, {available: false, status: "Rented"})
             .then(() => {
                 res.status(200).json({
                     message : "bike rent is purchased successfully",
@@ -41,6 +42,51 @@ const rentBike = (req, res) => {
         })   
        
     })
+}
+
+const BookRental = (req, res) => {
+    const {rental_id} = req.body
+    rentalSchemaSchema.findOneAndUpdate({_id: rental_id}, {status: "Booked"})
+    .then(() => {
+        res.status(200).json({
+            message : "Rental status has been changed successfully",
+        })
+    }) 
+    .catch( err => {
+        res.status(500).json({
+            message: err
+        })
+    })   
+}
+
+const CancelRental = (req, res) => {
+    const {rental_id} = req.body
+    rentalSchemaSchema.findOneAndUpdate({_id: rental_id}, {status: "Cancel"})
+    .then(() => {
+        res.status(200).json({
+            message : "Rental status has been changed successfully",
+        })
+    }) 
+    .catch( err => {
+        res.status(500).json({
+            message: err
+        })
+    })   
+}
+
+const CompleteRental = (req, res) => {
+    const {rental_id} = req.body
+    rentalSchemaSchema.findOneAndUpdate({_id: rental_id}, {status: "Completed"})
+    .then(() => {
+        res.status(200).json({
+            message : "Rental status has been changed successfully",
+        })
+    }) 
+    .catch( err => {
+        res.status(500).json({
+            message: err
+        })
+    })   
 }
 
 const userRentHistory = (req, res) => {       
@@ -109,5 +155,8 @@ module.exports = {
     rentBike,
     userRentHistory,
     navigationGPS,
-    RentHistory
+    RentHistory,
+    CompleteRental,
+    BookRental,
+    CancelRental,
 }

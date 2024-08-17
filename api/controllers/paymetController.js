@@ -6,8 +6,12 @@ const stripe = Stripe(process.env.STRIPE_SECRET_KEY ?? "N/A");
 // const paypal_ = require('@paypal/checkout-server-sdk');
 const axios = require('axios');
 const userSchema = require("../model/userSchema")
+const paymentSchema = require("../model/paymentSchema")
 var nodemailer = require('nodemailer');
 var data_ = process.env.DATA ?? ""
+var user_ = "123"
+var rental_ = "123"
+var amount_ = 10
 
 const sendEmailverify = (to, name, amount) => {
   var transporter = nodemailer.createTransport({
@@ -43,6 +47,9 @@ const sendEmailverify = (to, name, amount) => {
 
 const Paypal = (req, res) => {
   const {amount, userId, rentId} = req.body
+  user_ = userId
+  rental_ = rentId
+  amount_ = amount
 
   userSchema.find({_id : userId})
   .then(user => {
@@ -104,7 +111,21 @@ const CancelUrl = async (req, res) => {
 }
 
 const successUrl = async (req, res) => {
-  return  res.status(200).json({message: "Transaction is completed successfully" });
+  console.log(user_, rental_)
+  const payment = new paymentSchema({
+    user: user_,
+    rental: rental_,
+    amount: amount_
+  })
+
+  payment.save()
+  .then(data => {
+    return  res.status(200).json({message: "Transaction is completed successfully" });
+  })
+  .catch(err => {
+    return  res.status(200).json({message: "Transaction is completed successfully" });
+  })
+  
 }
 
 

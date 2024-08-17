@@ -8,6 +8,7 @@ const rentalSchema = new schema({
     expiretime:  {type : String},
     rentHr:  {type : String, required : true},
     is_expired:  {type : Boolean, default : false},
+    status:  {type : String, default : "In Progress"},
 },{timestamps : true})
 
 module.exports = mongoose.model("Rental", rentalSchema)

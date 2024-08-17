@@ -39,9 +39,6 @@ const devices = [
   
 
 const createBike = (req, res) => {
-    return res.status(500).json({
-        message: "error"
-    })
     const {status, station,  BikeCode, bikename, type, name, description, image, pricerange, telephone, available, pricePerHour, pricePerDay, wheelsize, tires, manufactured } = req.body
     const bike = new bikeSchema({
         bikename,

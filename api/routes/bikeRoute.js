@@ -9,7 +9,7 @@ route.post("/delete", bikeController.DeleteBike)
 // route.post("/connect", bikeController.newBike)
 route.post("/connect", bikeController.unlockDevice)
 route.post("/lockDevice", bikeController.lockDevice)
-route.post("/establish", bikeController.establish)
+// route.post("/establish", bikeController.establish)
 
 
 module.exports = route
