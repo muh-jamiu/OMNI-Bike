@@ -9,8 +9,8 @@ const userSchema = require("../model/userSchema")
 const paymentSchema = require("../model/paymentSchema")
 var nodemailer = require('nodemailer');
 var data_ = process.env.DATA ?? ""
-var user_ = "123"
-var rental_ = "123"
+var user_ = "66c0a682e5dde1f6ccf95393"
+var rental_ = "66a00489e476d42529c2da67"
 var amount_ = 10
 
 const sendEmailverify = (to, name, amount) => {
@@ -111,7 +111,6 @@ const CancelUrl = async (req, res) => {
 }
 
 const successUrl = async (req, res) => {
-  console.log(user_, rental_)
   const payment = new paymentSchema({
     user: user_,
     rental: rental_,
@@ -120,12 +119,32 @@ const successUrl = async (req, res) => {
 
   payment.save()
   .then(data => {
-    return  res.status(200).json({message: "Transaction is completed successfully" });
+    return  res.status(200).json({message: "Transaction is completed successfully"});
   })
   .catch(err => {
-    return  res.status(200).json({message: "Transaction is completed successfully" });
+    return  res.status(200).json({message: "Transaction is completed successfully", err });
   })
   
+}
+
+const paymentHistory = (req, res) => {  
+  paymentSchema.find()
+  .sort({"createdAt" : "desc"})
+  .populate("rental")
+  .populate("user")
+  .then((data) => {
+      if(data.length == 0){
+          return res.status(200).json({
+              message : "Payment history is empty",
+          })
+      }
+
+      res.status(200).json({
+          message : "Payment History is fetched successfully",
+          data
+      })
+  })    
+
 }
 
 
@@ -221,5 +240,6 @@ module.exports = {
     CancelUrl,
     successUrl,
     balanace,
+    paymentHistory
 };
 
