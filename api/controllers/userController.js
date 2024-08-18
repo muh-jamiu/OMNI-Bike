@@ -712,6 +712,7 @@ const UpdateRental = (req, res) => {
 }
 
 const createRentalSetting = (req, res) => {
+    const {ride_price, pause_price, fee} = req.body
     const user = new rentalSettingsSchema({
         ride_price: ride_price,
         pause_price: pause_price, 
