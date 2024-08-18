@@ -4,7 +4,7 @@ const axios = require('axios');
 
 const rentBike = (req, res) => {
     const {user, bike, rentHr, expiretime} = req.body
-    bikeSchema.find({BikeCode: bike})
+    bikeSchema.find({_id: bike})
     .then(data => {
         if(data.length == 0){
             return res.status(400).json({
@@ -28,7 +28,7 @@ const rentBike = (req, res) => {
     
         rent.save()
         .then(() => {
-            bikeSchema.findOneAndUpdate({BikeCode: bike}, {available: false, status: "Rented"})
+            bikeSchema.findOneAndUpdate({_id: bike}, {available: false, status: "Rented"})
             .then(() => {
                 res.status(200).json({
                     message : "bike rent is purchased successfully",
