@@ -738,7 +738,7 @@ const createRentalSetting = (req, res) => {
 const getRentalSettings = (req, res) => {
     rentalSettingsSchema.find()
     .then(Rentals => {
-        return res.status(400).json({
+        return res.status(200).json({
             message : "Rentals fetch for this bike successfully",
             Rentals
         })
