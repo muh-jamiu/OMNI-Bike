@@ -3,6 +3,7 @@ const CodeSchema = require("../model/codeSchema")
 const adminSchema = require("../model/adminSchema")
 const reviewSchema = require("../model/reviewSchema")
 const notificationsSchema = require("../model/notificationsSchema")
+const rentalSettingsSchema = require("../model/rentalSettingsSchema")
 const bcrypt = require("bcryptjs")
 const jwt = require("jsonwebtoken")
 var nodemailer = require('nodemailer');
@@ -183,11 +184,11 @@ const loginAdmin = (req, res) => {
 }
 
 const UpdateAdmin = (req, res) => {
-    const {fullname, email, password} = req.body
+    const {name, email, password, id} = req.body
     if(password){
         bcrypt.hash(req.body.password, 10, (err, hash) => {
             if(hash){
-                adminSchema.findOneAndUpdate({_id : id}, {fullname:fullname, password: hash, email:email })
+                adminSchema.findOneAndUpdate({_id : id}, {fullname: name, password: hash, email: email })
                 .then(result => {
                     if(!result){
                         return res.status(400).json({
@@ -196,7 +197,7 @@ const UpdateAdmin = (req, res) => {
                     }
                     res.status(200).json({
                         message: "admin has been updated succesfully",
-                        data: result
+                        user: result
                     })
                 })
                 .catch(err => {
@@ -208,7 +209,7 @@ const UpdateAdmin = (req, res) => {
         }
         );
     }else{
-    adminSchema.findOneAndUpdate({_id : id}, {fullname:fullname, email:email })
+    adminSchema.findOneAndUpdate({_id : id}, {fullname: name, email: email })
     .then(result => {
         if(!result){
             return res.status(400).json({
@@ -217,7 +218,7 @@ const UpdateAdmin = (req, res) => {
         }
         res.status(200).json({
             message: "admin has been updated succesfully",
-            data: result
+            user: result
         })
     })
     .catch(err => {
@@ -688,6 +689,68 @@ const getNotifications = (req, res) => {
    
 }
 
+
+const UpdateRental = (req, res) => {
+    const {ride_price, pause_price, fee, id} = req.body
+    rentalSettingsSchema.findOneAndUpdate({_id : id}, {ride_price: ride_price, pause_price: pause_price, fee: fee })
+    .then(result => {
+        if(!result){
+            return res.status(400).json({
+                message: "rental settings does not exist"
+            })
+        }
+        res.status(200).json({
+            message: "rental settings has been updated succesfully",
+            data: result
+        })
+    })
+    .catch(err => {
+        res.status(500).json({
+            message : err
+        })
+    }) 
+}
+
+const createRentalSetting = (req, res) => {
+    const user = new rentalSettingsSchema({
+        ride_price: ride_price,
+        pause_price: pause_price, 
+        fee: fee
+    })
+
+    user.save()
+    .then(data => {
+        res.status(200).json({
+            message : "Rental settings created successfully",
+            data,
+        })
+    })
+    .catch( err => {
+        res.status(500).json({
+            message: err
+        })
+    })
+
+   
+}
+
+const getRentalSettings = (req, res) => {
+    rentalSettingsSchema.find()
+    .then(Rentals => {
+        return res.status(400).json({
+            message : "Rentals fetch for this bike successfully",
+            Rentals
+        })
+    }) 
+    .catch( err => {
+        res.status(500).json({
+            message: err
+        })
+    })
+   
+}
+
+
 module.exports = {
     createUser, 
     getAllUser,
@@ -707,4 +770,7 @@ module.exports = {
     CreateNotifications,
     getNotifications,
     UpdateAdmin,
+    UpdateRental,
+    createRentalSetting,
+    getRentalSettings
 }

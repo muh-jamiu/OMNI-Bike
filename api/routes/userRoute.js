@@ -19,6 +19,10 @@ route.post("/request-password-reset", userController.requestPasswordCode)
 route.post("/confirm-password-reset", userController.verifyPasswordReset)
 route.post("/admin-login", userController.loginAdmin)
 route.post("/admin-signup", userController.createAdmin)
+route.post("/admin-update", userController.UpdateAdmin)
+route.post("/create-rental-settings", userController.createRentalSetting)
+route.post("/update-rental-settings", userController.UpdateRental)
+route.post("/get-rental-settings", userController.getRentalSettings)
 
 
 module.exports = route
