@@ -1,9 +1,11 @@
 const rentalSchemaSchema = require("../model/bookingSchema")
 const bikeSchema = require("../model/bikeSchema")
 const axios = require('axios');
+var bikeID = 0
 
 const rentBike = (req, res) => {
     const {user, bike, rentHr, expiretime} = req.body
+    bikeID = bike
     bikeSchema.find({_id: bike})
     .then(data => {
         if(data.length == 0){
@@ -47,10 +49,14 @@ const rentBike = (req, res) => {
 const BookRental = (req, res) => {
     const {rental_id} = req.body
     rentalSchemaSchema.findOneAndUpdate({_id: rental_id}, {status: "Booked"})
-    .then(() => {
-        res.status(200).json({
-            message : "Rental status has been changed successfully",
-        })
+    .then((rental) => {
+        bikeSchema.findOneAndUpdate({_id: rental.bike}, {available: false, status: "Booked"})
+        .then((bike_) => {
+            res.status(200).json({
+                message : "Rental status has been changed successfully",
+                bike_
+            })
+        }) 
     }) 
     .catch( err => {
         res.status(500).json({
@@ -62,10 +68,14 @@ const BookRental = (req, res) => {
 const CancelRental = (req, res) => {
     const {rental_id} = req.body
     rentalSchemaSchema.findOneAndUpdate({_id: rental_id}, {status: "Cancel"})
-    .then(() => {
-        res.status(200).json({
-            message : "Rental status has been changed successfully",
-        })
+    .then((rental) => {
+        bikeSchema.findOneAndUpdate({_id: rental.bike}, {available: false, status: "Available"})
+        .then((bike_) => {
+            res.status(200).json({
+                message : "Rental status has been changed successfully",
+                bike_
+            })
+        }) 
     }) 
     .catch( err => {
         res.status(500).json({
@@ -77,10 +87,14 @@ const CancelRental = (req, res) => {
 const CompleteRental = (req, res) => {
     const {rental_id} = req.body
     rentalSchemaSchema.findOneAndUpdate({_id: rental_id}, {status: "Completed"})
-    .then(() => {
-        res.status(200).json({
-            message : "Rental status has been changed successfully",
-        })
+    .then((rental) => {
+        bikeSchema.findOneAndUpdate({_id: rental.bike}, {available: false, status: "Available"})
+        .then((bike_) => {
+            res.status(200).json({
+                message : "Rental status has been changed successfully",
+                bike_
+            })
+        }) 
     }) 
     .catch( err => {
         res.status(500).json({
